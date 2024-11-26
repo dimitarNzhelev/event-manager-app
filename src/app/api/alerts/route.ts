@@ -1,12 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { join } from 'path'
-import { promises as fs } from 'fs'
+import { NextRequest, NextResponse } from 'next/server';
+import { env } from '~/env';
+import { Alert } from '~/types';
 
-export async function GET(req: NextRequest, res: NextResponse) {
-  const filePath = join(process.cwd(), 'public', 'alerts.json')
-  const fileContents = await fs.readFile(filePath, 'utf8')
+export async function GET(req: NextRequest) {
+  const response = await fetch(`${env.BACKEND_URL}/alerts`);
+  const alerts = await response.json();
 
-  const result = JSON.parse(fileContents)
+  alerts.forEach((alert: any) => {
+    if (typeof alert.annotations === 'string') {
+      try {
+        const sanitizedAnnotations = alert.annotations
+          .replace(/\n/g, ' ') 
+          .replace(/\\n/g, ' ')
 
-  return NextResponse.json(result)
+          alert.annotations = JSON.parse(sanitizedAnnotations);
+      } catch (e) {
+        console.error('Failed to parse annotations:', e);
+      }
+    }
+  });
+
+  return NextResponse.json(alerts);
 }

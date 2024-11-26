@@ -27,7 +27,7 @@ export function AlertsVisualization() {
     <div className="space-y-4">
       {alerts.map((alert, index) => (
         <motion.div
-          key={alert.id}
+          key={alert.fingerprint}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
@@ -35,7 +35,9 @@ export function AlertsVisualization() {
           <AlertComp variant="destructive" className="border-gray-700 bg-black">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle className="text-gray-100">{alert.alert_name}</AlertTitle>
-            <AlertDescription className="text-gray-300">{alert.annotations.summary}</AlertDescription>
+            <AlertDescription className="text-gray-300">
+              {typeof alert.annotations === 'string' ? alert.annotations : alert.annotations.summary ?? 'No summary available'}
+            </AlertDescription>
           </AlertComp>
         </motion.div>
       ))}

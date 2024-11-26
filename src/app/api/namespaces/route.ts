@@ -1,15 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { join } from 'path'
-import { promises as fs } from 'fs'
+import { env } from '~/env'
 
-export async function GET(req: NextRequest, res: NextResponse) {
-  const filePath = join(process.cwd(), 'public', 'namespaces.json')
-  const fileContents = await fs.readFile(filePath, 'utf8')
-  const result = JSON.parse(fileContents)
-  let namespaces: string[] = []
-  namespaces = result.map((namespace: any) => {
-    return namespace.metadata.name
-  })
-
+export async function GET(req: NextRequest) {
+  const response = await fetch(`${env.BACKEND_URL}/namespaces`)
+  const namespaces = await response.json()
   return NextResponse.json(namespaces)
 }

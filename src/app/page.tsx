@@ -4,7 +4,6 @@ import { motion } from "framer-motion"
 import { DashboardLayout } from "../components/dashboard-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
 import { PodList } from "~/components/pod-list"
-import { ClusterMetrics } from "~/components/cluster-metrics"
 import { AlertsVisualization } from "~/components/alerts-visualization"
 import { useEffect, useState } from "react"
 import { Pod, Alert } from "~/types"
@@ -17,22 +16,33 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchPods = async () => {
-      const response = await fetch('api/pods')
-      const data = await response.json()
-      console.log(data)
-      setPods(data)
+      try {
+        const response = await fetch('api/pods')
+        const data = await response.json()
+        setPods(data)
+      } catch (e) {
+        console.error(e);
+      }
     }
 
     const fetchNamespaces = async () => {
-      const response = await fetch('api/namespaces')
-      const data = await response.json()
-      setNamespaces(data)
+      try {
+        const response = await fetch('api/namespaces')
+        const data = await response.json()
+        setNamespaces(data)
+      } catch (e) {
+        console.error(e);
+      }
     }
 
     const fetchAlerts = async () => {
-      const response = await fetch('api/alerts')
-      const data = await response.json()      
-      setAlerts(data)
+      try {
+        const response = await fetch('api/alerts')
+        const data = await response.json()      
+        setAlerts(data) 
+      } catch (e) {
+        console.error(e);
+      }
     }
 
     fetchPods();

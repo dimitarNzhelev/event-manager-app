@@ -1,5 +1,4 @@
 export interface Alert {
-    id: number
     alert_name: string
     labels: {
         alertname: string
@@ -10,7 +9,7 @@ export interface Alert {
         description: string
         runbook_url: string
         summary: string
-    }
+    } | string
     start_time: string
     end_time: string
     generatorURL: string

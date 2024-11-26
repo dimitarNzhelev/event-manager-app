@@ -16,15 +16,20 @@ export function ClusterMetrics() {
 
   useEffect(() => {
     const fetchMetrics = async () => {
-      const response = await fetch('/api/metrics')
-      const data = await response.json()
-      setMetrics(data)
+      try {
+        const response = await fetch('/api/metrics')
+        const data = await response.json()
+        setMetrics(data)
+      } catch (error) {
+        console.error('Error fetching metrics:', error)
+      }
     }
-
+  
     fetchMetrics()
-    // Set up polling for real-time updates
-    const intervalId = setInterval(fetchMetrics, 60000) // Update every minute
-
+    const intervalId = setInterval(() => {
+      fetchMetrics().catch(error => console.error('Error fetching metrics:', error))
+    }, 60000) // Update every minute
+  
     return () => clearInterval(intervalId)
   }, [])
 

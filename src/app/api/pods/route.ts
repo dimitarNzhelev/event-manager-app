@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { join } from 'path'
-import { promises as fs } from 'fs'
-import {Pod } from '~/types'
+import { env } from '~/env'
+import { Pod } from '~/types'
 
 function calculateAge(timestamp: string): string {
   const creationDate = new Date(timestamp)
@@ -16,10 +15,9 @@ function calculateAge(timestamp: string): string {
   return `${days}d ${hours}h ${minutes}m ${seconds}s`
 }
 
-export async function GET(req: NextRequest, res: NextResponse) {
-  const filePath = join(process.cwd(), 'public', 'pods.json')
-  const fileContents = await fs.readFile(filePath, 'utf8')
-  const result = JSON.parse(fileContents)
+export async function GET(req: NextRequest) {
+  const response = await fetch(`${env.BACKEND_URL}/pods`)
+  const result = await response.json()
   let pods: Pod[] = []
   pods = result.map((pod: any) => {
     return {
