@@ -1,10 +1,11 @@
 import Link from "next/link"
-import { Home, PieChart, Bell, Settings } from 'lucide-react'
+import { Home, PieChart, Bell, Server, Settings } from 'lucide-react'
 import { motion } from "framer-motion"
 
 const menuItems = [
   { href: "/", icon: Home, label: "Home" },
   { href: "/metrics", icon: PieChart, label: "Metrics" },
+  { href: "/pods", icon: Server, label: "Pods" },
   { href: "/alerts", icon: Bell, label: "Alerts" },
   { href: "/settings", icon: Settings, label: "Settings" },
 ]

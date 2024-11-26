@@ -7,6 +7,7 @@ import { PodList } from "~/components/pod-list"
 import { AlertsVisualization } from "~/components/alerts-visualization"
 import { useEffect, useState } from "react"
 import { Pod, Alert } from "~/types"
+import Link from "next/link"
 
 
 export default function DashboardPage() {
@@ -80,41 +81,17 @@ export default function DashboardPage() {
             </Card>
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-gray-100">Active Alerts</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-4xl font-bold text-red-400">{alerts.length}</p>
-              </CardContent>
-            </Card>
+            <Link href="/alerts">
+              <Card className="bg-gray-800 border-gray-700 cursor-pointer">
+                <CardHeader>
+                  <CardTitle className="text-gray-100">Alerts</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-4xl font-bold text-red-400">{alerts.length}</p>
+                </CardContent>
+              </Card>
+            </Link>
           </motion.div>
-        </div>
-        <div className="mt-8 space-y-6">
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-gray-100">Pod List</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <PodList pods={pods}/>
-            </CardContent>
-          </Card>
-          {/* <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-gray-100">Cluster Metrics</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ClusterMetrics />
-            </CardContent>
-          </Card> */}
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-gray-100">Alerts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <AlertsVisualization />
-            </CardContent>
-          </Card>
         </div>
       </motion.div>
     </DashboardLayout>

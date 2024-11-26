@@ -9,6 +9,7 @@ export const env = createEnv({
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),
     BACKEND_URL: z.string().url(),
+    GRAFANA_URL: z.string().url(),
   },
 
   /**
@@ -27,6 +28,7 @@ export const env = createEnv({
   runtimeEnv: {
     BACKEND_URL: process.env.BACKEND_URL,
     NODE_ENV: process.env.NODE_ENV,
+    GRAFANA_URL: process.env.GRAFANA_URL,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

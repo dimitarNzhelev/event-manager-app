@@ -13,7 +13,7 @@ interface Pod {
 export function PodList({ pods }: { pods: Pod[] }) {
 
   return (
-    <div className="max-h-[300px] relative overflow-auto">
+    <div className="max-h-[600px] relative overflow-auto">
 
     <Table>
       <TableHeader className="sticky top-0 bg-gray-800">
