@@ -4,7 +4,7 @@ export function GrafanaPanel() {
     return (
       <div className="bg-gray-800 rounded-lg shadow-xl p-6">
         <iframe
-          src={`${env.GRAFANA_URL}/d-solo/fe4lbp0qww6bke/apache-doris-dashboard?orgId=1&from=1732600984941&to=1732622584941&timezone=browser&theme=dark&panelId=2&__feature.dashboardSceneSolo`}
+          src={`${env.NEXT_PUBLIC_GRAFANA_URL}/d/fe4lbp0qww6bke?orgId=1&kiosk&refresh=5s`}
           width="100%"
           height="400"
           frameBorder="0"
