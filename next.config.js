@@ -6,14 +6,6 @@ import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const config = {
-  async rewrites() {
-    return [
-      {
-        source: '/grafana/:path*',
-        destination: 'http://kps-grafana:80/:path*',
-      },
-    ];
-  },
 };
 
 export default config;
