@@ -45,7 +45,7 @@ export default function AlertsPage() {
             >
               <div className="bg-gray-800 rounded-lg shadow-xl p-6">
                 <iframe
-                  src="http://grafana.dzhelev.itgix.eu/public-dashboards/2780b32d80b446ccb8edba3a1a6a581a"
+                  src="https://grafana.dzhelev.itgix.eu/public-dashboards/2780b32d80b446ccb8edba3a1a6a581a"
                   width="100%"
                   height="600"
                 ></iframe>
