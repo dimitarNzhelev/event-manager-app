@@ -16,7 +16,11 @@ function calculateAge(timestamp: string): string {
 }
 
 export async function GET(req: NextRequest) {
-  const response = await fetch(`${env.BACKEND_URL}/pods`)
+  const response = await fetch(`${env.BACKEND_URL}/pods`, {
+    headers: {
+      Authorization: `Bearer ${env.AUTH_TOKEN}`,
+    },
+  })
   const result = await response.json()
   let pods: Pod[] = []
   pods = result.map((pod: any) => {

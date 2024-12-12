@@ -24,3 +24,31 @@ export interface Pod {
     restarts: number
     age: string
   }
+
+export interface AlertRule {
+    state: string
+    name: string
+    query: string
+    duration: number
+    labels: {
+      severity: string
+      [key: string]: string
+    }
+    annotations?: {
+      description: string
+      summary: string
+      [key: string]: string
+    }
+    health: string
+    evaluationTime: number
+    lastEvaluation: string
+    type: string
+  }
+
+export interface AlertRuleGroup {
+    name: string
+    file: string
+    rules: AlertRule[]
+}
+  
+  
