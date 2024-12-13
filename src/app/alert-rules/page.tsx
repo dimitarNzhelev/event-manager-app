@@ -35,6 +35,13 @@ export default function AlertRulesPage() {
     fetchRules()
   }
 
+
+  const handleRuleUpdate = (updatedRule: AlertRule) => {
+    setSelectedRule(updatedRule)
+    fetchRules()
+    location.reload()
+  }
+
   return (
     <div className="flex h-screen bg-gray-900 text-gray-100">
       <Sidebar />
@@ -64,7 +71,7 @@ export default function AlertRulesPage() {
                 {showCreateForm ? (
                   <CreateAlertRuleForm />
                 ) : selectedRule ? (
-                  <AlertRuleDetails rule={selectedRule} onDelete={handleRuleDelete} namespace={selectedNamespace} />
+                  <AlertRuleDetails rule={selectedRule} onDelete={handleRuleDelete} onUpdate={handleRuleUpdate} namespace={selectedNamespace} />
                 ) : (
                   <p className="text-gray-400">Select a rule to view details or create a new one</p>
                 )}

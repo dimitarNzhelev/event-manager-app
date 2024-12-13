@@ -1,7 +1,7 @@
 'use server'
 
 import { env } from '~/env'
-import { CreateAlertRuleParams, Pod } from '~/types'
+import { AlertRule, CreateAlertRuleParams, Pod } from '~/types'
 
 export async function createAlertRule(params: CreateAlertRuleParams) {
   const { alertName, namespace, expression, duration, severity, summary, description } = params
@@ -20,7 +20,7 @@ export async function createAlertRule(params: CreateAlertRuleParams) {
     spec: {
       groups: [
         {
-          name: "example.rules",
+          name: "event-manager-app.rules",
           rules: [
             {
               alert: alertName,
@@ -74,6 +74,7 @@ export async function getAlertRules(namespace: string) {
 
   const rules = body.map((rule: any) => ({
     id: rule.metadata.name,
+    resourceVersion: rule.metadata.resourceVersion,
     ...rule.spec.groups[0].rules[0],
   }))
 
@@ -116,6 +117,53 @@ export async function deleteRule(name: string, namespace: string) {
         throw new Error('Failed to delete alert rule')
     }
 
+}
+
+export async function updateRule(params: { id: string, namespace: string, updatedRule: AlertRule }) {
+  const { id, namespace, updatedRule } = params
+  const payload = {
+    apiVersion: "monitoring.coreos.com/v1",
+    kind: "PrometheusRule",
+    metadata: {
+      name: id,
+      resourceVersion: updatedRule.resourceVersion, 
+      namespace: namespace,
+      labels: {
+        prometheus: "example",
+        role: "alert-rules"
+      }
+    },
+    spec: {
+      groups: [
+        {
+          name: "event-manager-app.rules",
+          rules: [
+            {
+              alert: updatedRule.alert,
+              expr: updatedRule.expr,
+              for: updatedRule.for,
+              labels: updatedRule.labels,
+              annotations: updatedRule.annotations
+            }
+          ]
+        }
+      ]
+    }
+  }
+
+  const response = await fetch(`${env.BACKEND_URL}/rules/${id}?namespace=${namespace}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${env.AUTH_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+
+  if (!response.ok) {
+    console.error("Error response", response)
+    throw new Error('Failed to update alert rule')
+  }
 }
 
 export async function getPods() {

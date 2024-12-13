@@ -27,6 +27,7 @@ export interface Pod {
 
 export interface AlertRule {
     id: string
+    resourceVersion: string
     alert?: string
     expr: string
     labels?: {
