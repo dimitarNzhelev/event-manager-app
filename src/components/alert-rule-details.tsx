@@ -16,19 +16,19 @@ export function AlertRuleDetails({ rule }: AlertRuleDetailsProps) {
     >
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-white">{formatRuleName(rule.name)}</CardTitle>
+          <CardTitle className="text-2xl font-semibold text-white">{formatRuleName(rule.alert ?? "Unknown")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
             <h4 className="text-lg font-semibold text-gray-300">Query</h4>
             <pre className="bg-gray-900 p-2 rounded-md text-sm text-gray-300 overflow-x-auto">
-              {rule.query}
+              {rule.expr}
             </pre>
           </div>
           <div>
             <h4 className="text-lg font-semibold text-gray-300">Labels</h4>
             <ul className="list-disc list-inside text-gray-400">
-              {Object.entries(rule.labels).map(([key, value]) => (
+              {rule.labels && Object.entries(rule.labels).map(([key, value]) => (
                 <li key={key}>
                   <span className="font-semibold">{key}:</span> {value}
                 </li>
@@ -36,12 +36,12 @@ export function AlertRuleDetails({ rule }: AlertRuleDetailsProps) {
             </ul>
           </div>
           <div>
-            <h4 className="text-lg font-semibold text-gray-300">Duration</h4>
-            <p className="text-gray-400">{rule.duration} seconds</p>
+            <h4 className="text-lg font-semibold text-gray-300">For</h4>
+            <p className="text-gray-400">{rule.for}</p>
           </div>
           <div>
-            <h4 className="text-lg font-semibold text-gray-300">State</h4>
-            <p className="text-gray-400">{rule.state}</p>
+            <h4 className="text-lg font-semibold text-gray-300">Annotations</h4>
+            <p className="text-gray-400">{JSON.stringify(rule.annotations)}</p>
           </div>
         </CardContent>
       </Card>

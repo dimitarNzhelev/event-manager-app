@@ -26,29 +26,23 @@ export interface Pod {
   }
 
 export interface AlertRule {
-    state: string
-    name: string
-    query: string
-    duration: number
-    labels: {
+    alert?: string
+    expr: string
+    labels?: {
       severity: string
       [key: string]: string
     }
-    annotations?: {
+    annotations: {
       description: string
+      runbook_url: string
       summary: string
       [key: string]: string
     }
-    health: string
-    evaluationTime: number
-    lastEvaluation: string
-    type: string
+    for: string
   }
 
-export interface AlertRuleGroup {
-    name: string
-    file: string
-    rules: AlertRule[]
+
+export interface AlertRulesListProps {
+  rules: AlertRule[]
+  onSelectRule: (rule: AlertRule) => void
 }
-  
-  

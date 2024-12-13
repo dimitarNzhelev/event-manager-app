@@ -5,17 +5,17 @@ import { motion } from 'framer-motion'
 import { Sidebar } from '~/components/sidebar'
 import { AlertRulesList } from '~/components/alert-rules-list'
 import { AlertRuleDetails } from '~/components/alert-rule-details'
-import { AlertRule, AlertRuleGroup } from '~/types'
+import { AlertRule } from '~/types'
+
 
 export default function AlertRulesPage() {
   const [selectedRule, setSelectedRule] = useState<AlertRule | null>(null)
-  const [alertRuleGroups, setAlertRuleGroups] = useState<AlertRuleGroup[]>([])
-
+  const [rules, setRules] = useState<AlertRule[]>([])
   useEffect(() => {
     async function fetchAlertRuleGroups() {
       const response = await fetch('/api/alerts/rules')
       const data = await response.json()
-      setAlertRuleGroups(data)
+      setRules(data)
     }
     fetchAlertRuleGroups()
   }, [])
@@ -34,7 +34,7 @@ export default function AlertRulesPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
                 <h2 className="text-xl font-semibold mb-4">Rules List</h2>
-                <AlertRulesList ruleGroups={alertRuleGroups} onSelectRule={setSelectedRule} />
+                <AlertRulesList rules={rules} onSelectRule={setSelectedRule} />
               </div>
               <div>
                 <h2 className="text-xl font-semibold mb-4">Rule Details</h2>
