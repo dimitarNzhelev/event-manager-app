@@ -72,7 +72,10 @@ export async function getAlertRules(namespace: string) {
 
   const body = await response.json()
 
-  const rules = body.map((rule: any) => rule.spec.groups[0].rules[0])
+  const rules = body.map((rule: any) => ({
+    id: rule.metadata.name,
+    ...rule.spec.groups[0].rules[0],
+  }))
 
   return rules
 }
@@ -84,7 +87,6 @@ export async function getAlerts() {
         },
       });
       const alerts = await response.json();
-      console.log("ALERTS", )
       alerts.forEach((alert: any) => {
         if (typeof alert.annotations === 'string') {
           try {
@@ -100,6 +102,20 @@ export async function getAlerts() {
       });
 
     return alerts;
+}
+
+export async function deleteRule(name: string, namespace: string) {
+    const response = await fetch(`${env.BACKEND_URL}/rules/${name}?namespace=${namespace}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${env.AUTH_TOKEN}`,
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to delete alert rule')
+    }
+
 }
 
 export async function getPods() {

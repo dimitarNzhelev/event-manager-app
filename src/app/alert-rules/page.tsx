@@ -16,17 +16,23 @@ export default function AlertRulesPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [selectedNamespace, setSelectedNamespace] = useState<string>("monitoring")
 
+
+  const fetchRules = async () => {
+    const data = await getAlertRules(selectedNamespace)
+    setRules(data)
+  }
   useEffect(() => {
-    async function fetchAlertRuleGroups() {
-      const data = await getAlertRules(selectedNamespace)
-      setRules(data)
-    }
-    fetchAlertRuleGroups()
+    fetchRules()
   }, [selectedNamespace])
 
   const handleNamespaceChange = (namespace: string) => {
     setSelectedNamespace(namespace)
     setSelectedRule(null)
+  }
+
+  const handleRuleDelete = () => {
+    setSelectedRule(null)
+    fetchRules()
   }
 
   return (
@@ -58,7 +64,7 @@ export default function AlertRulesPage() {
                 {showCreateForm ? (
                   <CreateAlertRuleForm />
                 ) : selectedRule ? (
-                  <AlertRuleDetails rule={selectedRule} />
+                  <AlertRuleDetails rule={selectedRule} onDelete={handleRuleDelete} namespace={selectedNamespace} />
                 ) : (
                   <p className="text-gray-400">Select a rule to view details or create a new one</p>
                 )}
