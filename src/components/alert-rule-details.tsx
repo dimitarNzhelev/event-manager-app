@@ -40,8 +40,14 @@ export function AlertRuleDetails({ rule }: AlertRuleDetailsProps) {
             <p className="text-gray-400">{rule.for}</p>
           </div>
           <div>
-            <h4 className="text-lg font-semibold text-gray-300">Annotations</h4>
-            <p className="text-gray-400">{JSON.stringify(rule.annotations)}</p>
+            { rule.annotations &&  <h4 className="text-lg font-semibold text-gray-300">Annotations</h4>}
+            { rule.annotations && Object.entries(rule.annotations).map(([key, value]) => (
+              <div key={key}>
+                <h4 className="text-md font-semibold text-gray-300">{key}</h4>
+                <p className="text-sm text-gray-400">{value}</p>
+              </div>
+            ))}
+           
           </div>
         </CardContent>
       </Card>

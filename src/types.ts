@@ -46,3 +46,13 @@ export interface AlertRulesListProps {
   rules: AlertRule[]
   onSelectRule: (rule: AlertRule) => void
 }
+
+export interface CreateAlertRuleParams {
+  namespace: string
+  alertName: string
+  expression: string
+  duration: string
+  severity: string
+  summary: string
+  description: string
+}

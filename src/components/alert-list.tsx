@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { AlertCircle, AlertTriangle, Info } from 'lucide-react'
 import { Alert } from '~/types'
+import { getAlerts } from '~/app/actions'
 interface AlertListProps {
   onSelectAlert: (alert: Alert) => void
 }
@@ -25,9 +26,7 @@ export function AlertList({ onSelectAlert }: AlertListProps) {
 
   useEffect(() => {
     const fetchAlerts = async () => {
-      // In a real application, you would fetch this data from your API
-      const response = await fetch('/api/alerts')
-      const data = await response.json()
+      const data = await getAlerts();
       setAlerts(data)
     }
 

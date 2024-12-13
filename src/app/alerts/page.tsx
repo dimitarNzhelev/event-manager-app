@@ -6,8 +6,6 @@ import { AlertList } from '~/components/alert-list'
 import { AlertDetails } from '~/components/alert-details'
 import { Sidebar } from '~/components/sidebar'
 import { Alert } from '~/types'
-import Link from 'next/link'
-import { ExternalLink } from 'lucide-react'
 
 export default function AlertsPage() {
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null)

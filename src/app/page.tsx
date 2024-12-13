@@ -8,6 +8,7 @@ import { AlertsVisualization } from "~/components/alerts-visualization"
 import { useEffect, useState } from "react"
 import { Pod, Alert } from "~/types"
 import Link from "next/link"
+import { getAlerts, getNamespaces, getPods } from "./actions"
 
 
 export default function DashboardPage() {
@@ -18,8 +19,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchPods = async () => {
       try {
-        const response = await fetch('api/pods')
-        const data = await response.json()
+        const data = await getPods();
         setPods(data)
       } catch (e) {
         console.error(e);
@@ -28,8 +28,7 @@ export default function DashboardPage() {
 
     const fetchNamespaces = async () => {
       try {
-        const response = await fetch('api/namespaces')
-        const data = await response.json()
+        const data = await getNamespaces();
         setNamespaces(data)
       } catch (e) {
         console.error(e);
@@ -38,8 +37,7 @@ export default function DashboardPage() {
 
     const fetchAlerts = async () => {
       try {
-        const response = await fetch('api/alerts')
-        const data = await response.json()      
+        const data = await getAlerts();      
         setAlerts(data) 
       } catch (e) {
         console.error(e);

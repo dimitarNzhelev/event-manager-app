@@ -5,6 +5,7 @@ import { AlertComp, AlertDescription, AlertTitle } from "~/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { Alert } from "~/types"
+import { getAlerts } from "~/app/actions"
 
 
 export function AlertsVisualization() {
@@ -13,9 +14,7 @@ export function AlertsVisualization() {
   useEffect(() => {
     // In a real application, you would fetch this data from your alerting system
     const fetchAlerts = async () => {
-      // Simulated API call
-      const response = await fetch('/api/alerts')
-      const data = await response.json()
+      const data = await getAlerts();
       console.log(data);
       setAlerts(data)
     }

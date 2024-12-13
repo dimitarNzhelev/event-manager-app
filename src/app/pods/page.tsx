@@ -6,6 +6,7 @@ import {PodList} from '~/components/pod-list';
 import { useEffect, useState } from 'react';
 import { PodStatistics } from '~/components/pod-statistics';
 import { Pod } from '~/types';
+import { getPods } from '../actions';
 
 export default function PodsPage() {
     const [pods, setPods] = useState<Pod[]>([])
@@ -13,8 +14,7 @@ export default function PodsPage() {
     useEffect(() => {
         const fetchPods = async () => {
             try {
-                const response = await fetch('api/pods')
-                const data = await response.json()
+                const data = await getPods();
                 setPods(data)
             } catch (e) {
                 console.error(e);
