@@ -5,20 +5,29 @@ import { motion } from 'framer-motion'
 import { Sidebar } from '~/components/sidebar'
 import { AlertRulesList } from '~/components/alert-rules-list'
 import { AlertRuleDetails } from '~/components/alert-rule-details'
+import { CreateAlertRuleForm } from '~/components/create-alert-rule-form'
+import { NamespaceSelector } from '~/components/namespace-selector'
 import { AlertRule } from '~/types'
-
+import { getAlertRules } from '../actions'
 
 export default function AlertRulesPage() {
   const [selectedRule, setSelectedRule] = useState<AlertRule | null>(null)
   const [rules, setRules] = useState<AlertRule[]>([])
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [selectedNamespace, setSelectedNamespace] = useState<string>("monitoring")
+
   useEffect(() => {
     async function fetchAlertRuleGroups() {
-      const response = await fetch('/api/alerts/rules')
-      const data = await response.json()
+      const data = await getAlertRules(selectedNamespace)
       setRules(data)
     }
     fetchAlertRuleGroups()
-  }, [])
+  }, [selectedNamespace])
+
+  const handleNamespaceChange = (namespace: string) => {
+    setSelectedNamespace(namespace)
+    setSelectedRule(null)
+  }
 
   return (
     <div className="flex h-screen bg-gray-900 text-gray-100">
@@ -30,18 +39,28 @@ export default function AlertRulesPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl font-semibold text-gray-100 mb-6">Alert Rules</h1>
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-3xl font-semibold text-gray-100">Alert Rules</h1>
+              <NamespaceSelector onNamespaceChange={handleNamespaceChange} />
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
                 <h2 className="text-xl font-semibold mb-4">Rules List</h2>
                 <AlertRulesList rules={rules} onSelectRule={setSelectedRule} />
+                <button
+                  onClick={() => setShowCreateForm(!showCreateForm)}
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                >
+                  {showCreateForm ? 'Hide Create Form' : 'Create New Alert Rule'}
+                </button>
               </div>
               <div>
-                <h2 className="text-xl font-semibold mb-4">Rule Details</h2>
-                {selectedRule ? (
+                {showCreateForm ? (
+                  <CreateAlertRuleForm />
+                ) : selectedRule ? (
                   <AlertRuleDetails rule={selectedRule} />
                 ) : (
-                  <p className="text-gray-400">Select a rule to view details</p>
+                  <p className="text-gray-400">Select a rule to view details or create a new one</p>
                 )}
               </div>
             </div>

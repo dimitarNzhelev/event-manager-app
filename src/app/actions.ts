@@ -50,10 +50,11 @@ export async function createAlertRule(params: CreateAlertRuleParams) {
   })
 
   if (!response.ok) {
+    console.error("Error response", response)
     throw new Error('Failed to create alert rule')
   }
 
-  return response.json()
+  return response.ok
 }
 
 export async function getAlertRules(namespace: string) {
