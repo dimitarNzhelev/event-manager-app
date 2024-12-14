@@ -1,7 +1,7 @@
 'use server'
 
 import { env } from '~/env'
-import { AlertRule, CreateAlertRuleParams, Pod } from '~/types'
+import type { Alert, AlertRule, CreateAlertRuleParams, Pod } from '~/types'
 
 export async function createAlertRule(params: CreateAlertRuleParams) {
   const { alertName, namespace, expression, duration, severity, summary, description } = params
@@ -54,7 +54,7 @@ export async function createAlertRule(params: CreateAlertRuleParams) {
     throw new Error('Failed to create alert rule')
   }
 
-  return response.ok
+  return response.ok as boolean
 }
 
 export async function getAlertRules(namespace: string) {
@@ -78,7 +78,7 @@ export async function getAlertRules(namespace: string) {
     ...rule.spec.groups[0].rules[0],
   }))
 
-  return rules
+  return rules as AlertRule[]
 }
 
 export async function getAlerts() {
@@ -102,7 +102,7 @@ export async function getAlerts() {
         }
       });
 
-    return alerts;
+    return alerts as Alert[];
 }
 
 export async function deleteRule(name: string, namespace: string) {
@@ -196,7 +196,7 @@ export async function getNamespaces() {
       })
     const data = await response.json()
     const namespaces = data.map((namespace: any) => namespace?.metadata?.name ?? "")    
-    return namespaces
+    return namespaces as string[]
 }
 
 

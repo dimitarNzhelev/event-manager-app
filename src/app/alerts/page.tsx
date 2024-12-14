@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { AlertList } from '~/components/alert-list'
 import { AlertDetails } from '~/components/alert-details'
 import { Sidebar } from '~/components/sidebar'
-import { Alert } from '~/types'
+import type { Alert } from '~/types'
 
 export default function AlertsPage() {
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null)

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { AlertCircle, AlertTriangle, Info } from 'lucide-react'
-import { Alert } from '~/types'
+import type { Alert } from '~/types'
 import { getAlerts } from '~/app/actions'
 interface AlertListProps {
   onSelectAlert: (alert: Alert) => void

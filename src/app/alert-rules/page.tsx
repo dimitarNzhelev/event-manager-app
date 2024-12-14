@@ -1,13 +1,13 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Sidebar } from '~/components/sidebar'
 import { AlertRulesList } from '~/components/alert-rules-list'
 import { AlertRuleDetails } from '~/components/alert-rule-details'
 import { CreateAlertRuleForm } from '~/components/create-alert-rule-form'
 import { NamespaceSelector } from '~/components/namespace-selector'
-import { AlertRule } from '~/types'
+import type { AlertRule } from '~/types'
 import { getAlertRules } from '../actions'
 
 export default function AlertRulesPage() {
@@ -17,13 +17,14 @@ export default function AlertRulesPage() {
   const [selectedNamespace, setSelectedNamespace] = useState<string>("monitoring")
 
 
-  const fetchRules = async () => {
+  const fetchRules = useCallback(async () => {
     const data = await getAlertRules(selectedNamespace)
     setRules(data)
-  }
+  }, [selectedNamespace])
+
   useEffect(() => {
     fetchRules()
-  }, [selectedNamespace])
+  }, [selectedNamespace, fetchRules])
 
   const handleNamespaceChange = (namespace: string) => {
     setSelectedNamespace(namespace)

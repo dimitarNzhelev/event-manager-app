@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { AlertCircle } from 'lucide-react'
 import { Button } from "~/components/ui/button"
@@ -12,7 +11,6 @@ import { Label } from "~/components/ui/label"
 import { createAlertRule } from '../app/actions'
 
 export function CreateAlertRuleForm() {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

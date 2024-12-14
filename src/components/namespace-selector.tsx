@@ -57,7 +57,7 @@ export function NamespaceSelector({ onNamespaceChange }: NamespaceSelectorProps)
           <CommandInput placeholder="Search namespace..." className="text-white" />
           <CommandEmpty>No namespace found.</CommandEmpty>
           <CommandGroup>
-            {namespaces && namespaces.map((namespace) => (
+            {namespaces?.map((namespace) => (
               <CommandItem
                 key={"namespace-" + namespace}
                 onSelect={(currentValue) => {

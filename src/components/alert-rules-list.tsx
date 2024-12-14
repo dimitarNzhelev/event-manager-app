@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Input } from "~/components/ui/input"
 import { AlertCircle, AlertTriangle, Info } from 'lucide-react'
-import { AlertRule, AlertRulesListProps } from '~/types'
+import type { AlertRule, AlertRulesListProps } from '~/types'
 import { formatRuleName } from '~/lib/utils'
 
 
@@ -26,7 +26,7 @@ export function AlertRulesList({ rules, onSelectRule }: AlertRulesListProps) {
   const [searchTerm, setSearchTerm] = useState('')
 
   const filteredRules = rules.filter((rule: AlertRule) => {
-    return rule.alert?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    return rule.alert?.toLowerCase().includes(searchTerm.toLowerCase()) ??
     rule.labels?.severity?.toLowerCase().includes(searchTerm.toLowerCase())
   })
 

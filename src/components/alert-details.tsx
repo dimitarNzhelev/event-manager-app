@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Alert } from '~/types'
+import type { Alert } from '~/types'
 
 interface AlertDetailsProps {
   alert: Alert

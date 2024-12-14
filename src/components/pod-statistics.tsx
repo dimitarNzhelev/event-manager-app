@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from 'framer-motion'
-import { Pod } from '~/types'
+import type { Pod } from '~/types'
 import { Check, AlertTriangle, XCircle, Activity } from 'lucide-react'
 
 interface PodStatisticsProps {

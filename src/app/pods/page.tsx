@@ -5,7 +5,7 @@ import {motion} from 'framer-motion';
 import {PodList} from '~/components/pod-list';
 import { useEffect, useState } from 'react';
 import { PodStatistics } from '~/components/pod-statistics';
-import { Pod } from '~/types';
+import type { Pod } from '~/types';
 import { getPods } from '../actions';
 
 export default function PodsPage() {

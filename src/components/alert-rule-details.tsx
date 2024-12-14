@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { AlertRule } from '~/types'
+import type { AlertRule } from '~/types'
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
 import { formatRuleName } from '~/lib/utils'
 import { Button } from '~/components/ui/button'
@@ -75,7 +75,7 @@ export function AlertRuleDetails({ rule, onDelete, onUpdate, namespace }: AlertR
         delete newLabels[oldKey]
       }
       newLabels[key] = value
-      return { ...prev, labels: { ...newLabels, severity: newLabels.severity ?? '' } }
+      return { ...prev, labels: { ...newLabels, severity: newLabels.severity ??'' } }
     })
   }
 
@@ -186,7 +186,7 @@ export function AlertRuleDetails({ rule, onDelete, onUpdate, namespace }: AlertR
           <h4 className="text-lg font-semibold text-gray-300">Labels</h4>
           {isEditing ? (
             <div className="space-y-2">
-              {Object.entries(editedRule.labels || {}).map(([key, value], index) => (
+              {Object.entries(editedRule.labels ?? {}).map(([key, value], index) => (
                 <div key={index} className="flex space-x-2">
                   <Input
                     value={key}
@@ -235,7 +235,7 @@ export function AlertRuleDetails({ rule, onDelete, onUpdate, namespace }: AlertR
           <h4 className="text-lg font-semibold text-gray-300">Annotations</h4>
           {isEditing ? (
             <div className="space-y-2">
-              {Object.entries(editedRule.annotations || {}).map(([key, value], index) => (
+              {Object.entries(editedRule.annotations ?? {}).map(([key, value], index) => (
                 <div key={index} className="flex space-x-2">
                   <Input
                     value={key}

@@ -3,10 +3,8 @@
 import { motion } from "framer-motion"
 import { DashboardLayout } from "../components/dashboard-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
-import { PodList } from "~/components/pod-list"
-import { AlertsVisualization } from "~/components/alerts-visualization"
 import { useEffect, useState } from "react"
-import { Pod, Alert } from "~/types"
+import type { Pod, Alert } from "~/types"
 import Link from "next/link"
 import { getAlerts, getNamespaces, getPods } from "./actions"
 
