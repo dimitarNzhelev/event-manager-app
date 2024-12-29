@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Home, OctagonMinus, Bell, Server, Settings } from 'lucide-react'
+import { Home, OctagonMinus, Bell, Server } from 'lucide-react'
 import { motion } from "framer-motion"
 
 const menuItems = [
@@ -7,7 +7,6 @@ const menuItems = [
   { href: "/alert-rules", icon: OctagonMinus, label: "Alert Rules" },
   { href: "/pods", icon: Server, label: "Pods" },
   { href: "/alerts", icon: Bell, label: "Alerts" },
-  { href: "/settings", icon: Settings, label: "Settings" },
 ]
 
 export function Sidebar() {

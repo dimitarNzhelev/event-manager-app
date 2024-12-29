@@ -3,60 +3,6 @@
 import { env } from '~/env'
 import type { Alert, AlertRule, CreateAlertRuleParams, Pod } from '~/types'
 
-export async function createAlertRule(params: CreateAlertRuleParams) {
-  const { alertName, namespace, expression, duration, severity, summary, description } = params
-
-  const payload = {
-    apiVersion: "monitoring.coreos.com/v1",
-    kind: "PrometheusRule",
-    metadata: {
-      name: alertName.toLowerCase().replace(/\s+/g, '-'),
-      namespace: namespace,
-      labels: {
-        prometheus: "example",
-        role: "alert-rules"
-      }
-    },
-    spec: {
-      groups: [
-        {
-          name: "event-manager-app.rules",
-          rules: [
-            {
-              alert: alertName,
-              expr: expression,
-              for: duration,
-              labels: {
-                severity: severity
-              },
-              annotations: {
-                summary: summary,
-                description: description
-              }
-            }
-          ]
-        }
-      ]
-    }
-  }
-
-  const response = await fetch(`${env.BACKEND_URL}/rules`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${env.AUTH_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  })
-
-  if (!response.ok) {
-    console.error("Error response", response)
-    throw new Error('Failed to create alert rule')
-  }
-
-  return response.ok as boolean
-}
-
 export async function getAlertRules(namespace: string) {
   const response = await fetch(`${env.BACKEND_URL}/rules?namespace=${namespace}`, {
     method: 'GET',
@@ -103,6 +49,39 @@ export async function getAlerts() {
       });
 
     return alerts as Alert[];
+}
+
+export async function getPods() {
+  const response = await fetch(`${env.BACKEND_URL}/pods`, {
+      headers: {
+        Authorization: `Bearer ${env.AUTH_TOKEN}`,
+      },
+    })
+    const result = await response.json()
+    let pods: Pod[] = []
+    pods = result.map((pod: any) => {
+      return {
+        name: pod.metadata.name,
+        namespace: pod.metadata.namespace,
+        status: pod.status.phase,
+        nodeName: pod.spec.nodeName,
+        restarts: pod.status.containerStatuses[0].restartCount,
+        age: calculateAge(pod.metadata.creationTimestamp),
+      }
+    })
+
+  return pods;
+}
+
+export async function getNamespaces() {
+  const response = await fetch(`${env.BACKEND_URL}/namespaces`, {
+      headers: {
+        Authorization: `Bearer ${env.AUTH_TOKEN}`,
+      },
+    })
+  const data = await response.json()
+  const namespaces = data.map((namespace: any) => namespace?.metadata?.name ?? "")    
+  return namespaces as string[]
 }
 
 export async function deleteRule(name: string, namespace: string) {
@@ -166,38 +145,60 @@ export async function updateRule(params: { id: string, namespace: string, update
   }
 }
 
-export async function getPods() {
-    const response = await fetch(`${env.BACKEND_URL}/pods`, {
-        headers: {
-          Authorization: `Bearer ${env.AUTH_TOKEN}`,
-        },
-      })
-      const result = await response.json()
-      let pods: Pod[] = []
-      pods = result.map((pod: any) => {
-        return {
-          name: pod.metadata.name,
-          namespace: pod.metadata.namespace,
-          status: pod.status.phase,
-          nodeName: pod.spec.nodeName,
-          restarts: pod.status.containerStatuses[0].restartCount,
-          age: calculateAge(pod.metadata.creationTimestamp),
+export async function createAlertRule(params: CreateAlertRuleParams) {
+  const { alertName, namespace, expression, duration, severity, summary, description } = params
+
+  const payload = {
+    apiVersion: "monitoring.coreos.com/v1",
+    kind: "PrometheusRule",
+    metadata: {
+      name: alertName.toLowerCase().replace(/\s+/g, '-'),
+      namespace: namespace,
+      labels: {
+        prometheus: "example",
+        role: "alert-rules"
+      }
+    },
+    spec: {
+      groups: [
+        {
+          name: "event-manager-app.rules",
+          rules: [
+            {
+              alert: alertName,
+              expr: expression,
+              for: duration,
+              labels: {
+                severity: severity
+              },
+              annotations: {
+                summary: summary,
+                description: description
+              }
+            }
+          ]
         }
-      })
+      ]
+    }
+  }
 
-    return pods;
+  const response = await fetch(`${env.BACKEND_URL}/rules`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.AUTH_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+
+  if (!response.ok) {
+    console.error("Error response", response)
+    throw new Error('Failed to create alert rule')
+  }
+
+  return response.ok as boolean
 }
 
-export async function getNamespaces() {
-    const response = await fetch(`${env.BACKEND_URL}/namespaces`, {
-        headers: {
-          Authorization: `Bearer ${env.AUTH_TOKEN}`,
-        },
-      })
-    const data = await response.json()
-    const namespaces = data.map((namespace: any) => namespace?.metadata?.name ?? "")    
-    return namespaces as string[]
-}
 
 
 function calculateAge(timestamp: string): string {
@@ -212,3 +213,7 @@ function calculateAge(timestamp: string): string {
   
     return `${days}d ${hours}h ${minutes}m ${seconds}s`
   }
+
+export async function getGrafanaDashboardURL() {
+  return env.DASHBOARD_URL;
+}

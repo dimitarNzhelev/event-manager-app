@@ -10,6 +10,7 @@ export const env = createEnv({
     NODE_ENV: z.enum(["development", "test", "production"]),
     BACKEND_URL: z.string().url(),
     AUTH_TOKEN: z.string(),
+    DASHBOARD_URL: z.string().url(),
   },
 
   /**
@@ -29,6 +30,7 @@ export const env = createEnv({
     BACKEND_URL: process.env.BACKEND_URL,
     AUTH_TOKEN: process.env.AUTH_TOKEN,
     NODE_ENV: process.env.NODE_ENV,
+    DASHBOARD_URL: process.env.DASHBOARD_URL,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

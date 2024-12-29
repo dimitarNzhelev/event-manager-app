@@ -1,15 +1,24 @@
 "use client"
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { AlertList } from '~/components/alert-list'
 import { AlertDetails } from '~/components/alert-details'
 import { Sidebar } from '~/components/sidebar'
 import type { Alert } from '~/types'
+import { getGrafanaDashboardURL } from '../actions'
 
 export default function AlertsPage() {
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null)
+  const [grafanaUrl, setGrafanaUrl] = useState<string | null>(null)
 
+  useEffect(() => {
+    const fetchGrafanaUrl = async () => {
+    const url =await  getGrafanaDashboardURL();
+    setGrafanaUrl(url);
+    }
+    fetchGrafanaUrl();
+  }, [])
   return (
     <div className="flex h-screen bg-gray-900 text-gray-100">
       <Sidebar />
@@ -43,7 +52,7 @@ export default function AlertsPage() {
             >
               <div className="bg-gray-800 rounded-lg shadow-xl p-6">
                 <iframe
-                  src="https://grafana.dzhelev.itgix.eu/public-dashboards/2780b32d80b446ccb8edba3a1a6a581a"
+                  src={`${grafanaUrl}`}
                   width="100%"
                   height="600"
                 ></iframe>
