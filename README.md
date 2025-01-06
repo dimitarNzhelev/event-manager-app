@@ -1,29 +1,52 @@
-# Create T3 App
+# Kubernetes Admin Dashboard
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A modern, responsive admin dashboard for monitoring Kubernetes clusters, managing Prometheus alert rules, and tracking alerts in real-time.
 
-## What's next? How do I make an app with this?
+## Features
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- **Cluster Overview**
+  - Total number of running pods
+  - Active namespaces count
+  - Current alert status
+  - Interactive dashboard cards with smooth animations
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- **Alert Management**
+  - Real-time alert monitoring
+  - Detailed alert information
+  - Integration with Grafana dashboards
+  - Alert history tracking
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- **Pod Management**
+  - Pod status monitoring
+  - Pod metrics visualization
+  - Namespace-based filtering
 
-## Learn More
+- **Alert Rules**
+  - View and manage Prometheus alert rules
+  - Rule status monitoring
+  - Easy navigation between related alerts and rules
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Tech Stack
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- **Frontend Framework**: Next.js
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **UI Components**: Shadcn/UI
+- **Icons**: Lucide Icons
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## Getting Started
 
-## How do I deploy this?
+### Prerequisites
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- Node.js (v16 or higher)
+- Environment variables configured
+
+### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+BACKEND_URL=<your-backend-api-url>
+AUTH_TOKEN=<your-auth-token>
+DASHBOARD_URL=<your-grafana-dashboard-url>
+NODE_ENV=development
