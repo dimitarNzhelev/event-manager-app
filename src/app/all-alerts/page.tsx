@@ -29,10 +29,9 @@ export default function AlertsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl font-semibold text-gray-100 mb-6">Alerts</h1>
+            <h1 className="text-3xl font-semibold text-gray-100 mb-6">All Alerts</h1>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
-                <h2 className="text-xl font-semibold mb-4">Active Alerts</h2>
                 <AlertList onSelectAlert={setSelectedAlert} />
               </div>
               <div>

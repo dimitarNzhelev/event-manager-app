@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion'
-import type { Alert } from '~/types'
+import type { AlertPrometheus } from '~/types'
 
 interface AlertDetailsProps {
-  alert: Alert
+  alert: AlertPrometheus
 }
 
-export function AlertDetails({ alert }: AlertDetailsProps) {
+export function AlertDetailsPrometheus({ alert }: AlertDetailsProps) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -42,22 +42,9 @@ export function AlertDetails({ alert }: AlertDetailsProps) {
         <div>
           <h4 className="text-lg font-semibold text-gray-300">Timing</h4>
           <p className="text-gray-400">
-            <span className="font-semibold">Start:</span> {new Date(alert.start_time).toLocaleString()}
+            <span className="font-semibold">Active at:</span> {new Date(alert.activeAt).toLocaleString()}
           </p>
         </div>
-        {alert.generatorURL && (
-          <div>
-            <h4 className="text-lg font-semibold text-gray-300">Generator URL</h4>
-            <a
-              href={alert.generatorURL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 hover:text-blue-300"
-            >
-              {alert.generatorURL}
-            </a>
-          </div>
-        )}
       </div>
     </motion.div>
   )

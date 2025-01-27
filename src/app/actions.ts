@@ -1,7 +1,7 @@
 'use server'
 
 import { env } from '~/env'
-import type { Alert, AlertRule, CreateAlertRuleParams, Pod } from '~/types'
+import type { Alert, AlertPrometheus, AlertRule, CreateAlertRuleParams, Pod } from '~/types'
 
 export async function getAlertRules(namespace: string) {
   const response = await fetch(`${env.BACKEND_URL}/rules?namespace=${namespace}`, {
@@ -28,27 +28,54 @@ export async function getAlertRules(namespace: string) {
 }
 
 export async function getAlerts() {
-    const response = await fetch(`${env.BACKEND_URL}/alerts`, {
+    const response = await fetch(`${env.BACKEND_URL}/alerts/firing`, {
         headers: {
           Authorization: `Bearer ${env.AUTH_TOKEN}`,
         },
       });
       const alerts = await response.json();
-      alerts.forEach((alert: any) => {
-        if (typeof alert.annotations === 'string') {
-          try {
-            const sanitizedAnnotations = alert.annotations
-              .replace(/\n/g, ' ') 
-              .replace(/\\n/g, ' ')
-    
-              alert.annotations = JSON.parse(sanitizedAnnotations);
-          } catch (e) {
-            console.error('Failed to parse annotations:', e);
-          }
-        }
-      });
 
-    return alerts as Alert[];
+      processAlert(alerts);
+
+    return alerts as AlertPrometheus[];
+}
+
+export async function getAllAlerts() {
+  const response = await fetch(`${env.BACKEND_URL}/alerts`, {
+    headers: {
+      Authorization: `Bearer ${env.AUTH_TOKEN}`,
+    },
+  });
+  const alerts = await response.json();
+
+  processAlert(alerts);
+
+return alerts as Alert[];
+}
+
+export async function getSilencedAlerts() {
+  const response = await fetch(`${env.BACKEND_URL}/alerts/silences`, {
+    headers: {
+      Authorization: `Bearer ${env.AUTH_TOKEN}`,
+    },
+  });
+  const alerts = await response.json();
+
+  processAlert(alerts);
+
+return alerts as AlertPrometheus[];
+}
+
+export async function getSilences() {
+}
+
+export async function createSilence() {
+}
+
+export async function deleteSilence() {
+}
+
+export async function updateSilence() {
 }
 
 export async function getPods() {
@@ -200,6 +227,21 @@ export async function createAlertRule(params: CreateAlertRuleParams) {
 }
 
 
+function processAlert(alerts: any) {
+  alerts.forEach((alert: any) => {
+    if (typeof alert.annotations === 'string') {
+      try {
+        const sanitizedAnnotations = alert.annotations
+          .replace(/\n/g, ' ') 
+          .replace(/\\n/g, ' ')
+
+          alert.annotations = JSON.parse(sanitizedAnnotations);
+      } catch (e) {
+        console.error('Failed to parse annotations:', e);
+      }
+    }
+  });
+}
 
 function calculateAge(timestamp: string): string {
     const creationDate = new Date(timestamp)

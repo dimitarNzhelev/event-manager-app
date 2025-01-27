@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { AlertCircle, AlertTriangle, Info } from 'lucide-react'
-import type { Alert } from '~/types'
-import { getAllAlerts } from '~/app/actions'
+import type { AlertPrometheus } from '~/types'
+import { getAlerts, getSilencedAlerts } from '~/app/actions'
 interface AlertListProps {
-  onSelectAlert: (alert: Alert) => void
+  onSelectAlert: (alert: AlertPrometheus) => void
+  forSilence: boolean
 }
 
 const severityIcons = {
@@ -21,13 +22,18 @@ const severityColors = {
   info: "bg-blue-700",
 }
 
-export function AlertList({ onSelectAlert }: AlertListProps) {
-  const [alerts, setAlerts] = useState<Alert[]>([])
+export function AlertListPrometheus({ onSelectAlert, forSilence }: AlertListProps) {
+  const [alerts, setAlerts] = useState<AlertPrometheus[]>([])
 
   useEffect(() => {
     const fetchAlerts = async () => {
-      const data = await getAllAlerts();
+        if(forSilence == false){
+      const data = await getAlerts();
       setAlerts(data)
+        }else {
+            const data = await getSilencedAlerts();
+            setAlerts(data)
+        }
     }
 
     fetchAlerts()
@@ -39,7 +45,7 @@ export function AlertList({ onSelectAlert }: AlertListProps) {
         const Icon = severityIcons[alert.labels.severity as keyof typeof severityIcons] || Info
         return (
           <motion.div
-            key={alert.fingerprint}
+            key={alert.labels.alertname}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}

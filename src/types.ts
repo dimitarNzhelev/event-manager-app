@@ -16,6 +16,20 @@ export interface Alert {
     fingerprint: string
 }
 
+export interface AlertPrometheus {
+  state: string
+  labels: {
+    alertname: string
+    severity: string
+  },
+  annotations: {
+    description: string
+    runbook_url: string
+    summary: string
+  } | string
+  activeAt: string
+}
+
 export interface Pod {
     name: string
     namespace: string
