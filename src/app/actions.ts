@@ -66,17 +66,17 @@ export async function getSilencedAlerts() {
 return alerts as AlertPrometheus[];
 }
 
-export async function getSilences() {
-}
+// export async function getSilences() {
+// }
 
-export async function createSilence() {
-}
+// export async function createSilence() {
+// }
 
-export async function deleteSilence() {
-}
+// export async function deleteSilence() {
+// }
 
-export async function updateSilence() {
-}
+// export async function updateSilence() {
+// }
 
 export async function getPods() {
   const response = await fetch(`${env.BACKEND_URL}/pods`, {

@@ -4,9 +4,9 @@ import { motion } from "framer-motion"
 import { DashboardLayout } from "../components/dashboard-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
 import { useEffect, useState } from "react"
-import type { Pod, Alert } from "~/types"
+import type { Pod, Alert, AlertPrometheus } from "~/types"
 import Link from "next/link"
-import { getAlerts, getNamespaces, getPods } from "./actions"
+import { getAllAlerts, getNamespaces, getPods } from "./actions"
 
 
 export default function DashboardPage() {
@@ -35,7 +35,7 @@ export default function DashboardPage() {
 
     const fetchAlerts = async () => {
       try {
-        const data = await getAlerts();      
+        const data = await getAllAlerts();      
         setAlerts(data) 
       } catch (e) {
         console.error(e);
