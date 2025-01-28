@@ -7,6 +7,7 @@ import type { Alert, Silence } from '~/types'
 import { getAllAlerts, getSilences } from '~/app/actions'
 interface SilenceListProps {
   onSelectSilence: (silence: Silence) => void
+  refresh: boolean
 }
 
 const severityIcons = {
@@ -21,17 +22,25 @@ const severityColors = {
   expired: "bg-blue-700",
 }
 
-export function SilenceList({ onSelectSilence }: SilenceListProps) {
+export function SilenceList({ onSelectSilence, refresh }: SilenceListProps) {
   const [silences, setSilences] = useState<Silence[]>([])
 
   useEffect(() => {
     const fetchSilences = async () => {
-      const data = await getSilences();
-      setSilences(data)
-    }
+      try {
+        const data = await getSilences(); // Replace with your API call
+        setSilences(data);
+      } catch (error) {
+        console.error("Error fetching silences:", error);
+      }
+    };
 
-    fetchSilences()
-  }, [])
+    fetchSilences();
+
+    const intervalId = setInterval(fetchSilences, 60000); // 60000ms = 1 minute
+
+    return () => clearInterval(intervalId);
+  }, [refresh]);
 
   return (
     <div className="space-y-4">

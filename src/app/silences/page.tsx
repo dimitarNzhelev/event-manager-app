@@ -10,13 +10,7 @@ import { SilenceList } from '~/components/silence-list'
 
 export default function SilencePage() {
   const [selectedSilence, setSelectedSilence] = useState<Silence | null>(null)
-
-  useEffect(() => {
-    const fetchSilences = async () => {
-        const data = await getSilences()
-        }
-    fetchSilences()
-    }, [])
+  const [refresh, setRefresh] = useState<boolean>(false)
 
   return (
     <div className="flex h-screen bg-gray-900 text-gray-100">
@@ -31,12 +25,12 @@ export default function SilencePage() {
             <h1 className="text-3xl font-semibold text-gray-100 mb-6">Silences</h1>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
-                <SilenceList onSelectSilence={setSelectedSilence} />
+                <SilenceList onSelectSilence={setSelectedSilence} refresh={refresh} />
               </div>
               <div>
                 <h2 className="text-xl font-semibold mb-4">Silence Details</h2>
                 {selectedSilence ? (
-                  <SilenceDetails silence={selectedSilence} />
+                  <SilenceDetails silence={selectedSilence} setRefresh={setRefresh} refresh={refresh} />
                 ) : (
                   <p className="text-gray-400">Select a silence to view details</p>
                 )}

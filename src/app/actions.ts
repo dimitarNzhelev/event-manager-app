@@ -80,11 +80,35 @@ export async function getSilences() {
 // export async function createSilence() {
 // }
 
-// export async function deleteSilence() {
-// }
+export async function deleteSilence(id: string) {
+  const response = await fetch(`${env.BACKEND_URL}/alerts/silences/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${env.AUTH_TOKEN}`,
+    },
+  })
 
-// export async function updateSilence() {
-// }
+  console.log("Response", response)
+  if (!response.ok) {
+    console.log("Error response", response)
+    throw new Error('Failed to delete silence')
+  }
+}
+
+export async function updateSilence(silence: Silence) {
+  const response = await fetch(`${env.BACKEND_URL}/alerts/silences`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${env.AUTH_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(silence),
+  })
+  if (!response.ok) {
+    console.log("Error response", response)
+    throw new Error('Failed to update silence')
+  }
+}
 
 export async function getPods() {
   const response = await fetch(`${env.BACKEND_URL}/pods`, {
