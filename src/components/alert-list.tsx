@@ -35,7 +35,7 @@ export function AlertList({ onSelectAlert }: AlertListProps) {
 
   return (
     <div className="space-y-4">
-      {alerts.map((alert, index) => {
+      {alerts && alerts.map((alert, index) => {
         const Icon = severityIcons[alert.labels.severity as keyof typeof severityIcons] || Info
         return (
           <motion.div
@@ -56,6 +56,7 @@ export function AlertList({ onSelectAlert }: AlertListProps) {
           </motion.div>
         )
       })}
+      {!alerts && <div className="text-white">No alerts found</div>}
     </div>
   )
 }

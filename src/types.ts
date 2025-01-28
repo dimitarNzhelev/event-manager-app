@@ -30,6 +30,24 @@ export interface AlertPrometheus {
   activeAt: string
 }
 
+export interface Silence {
+  id: string
+  matchers: {
+    name: string
+    value: string
+    isRegex: boolean
+    isEqual: boolean
+  }[]
+  startsAt: string
+  endsAt: string
+  updatedAt: string
+  createdBy: string
+  comment: string
+  status: {
+    state: string
+  }
+}
+
 export interface Pod {
     name: string
     namespace: string

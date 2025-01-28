@@ -1,7 +1,7 @@
 'use server'
 
 import { env } from '~/env'
-import type { Alert, AlertPrometheus, AlertRule, CreateAlertRuleParams, Pod } from '~/types'
+import type { Alert, AlertPrometheus, AlertRule, CreateAlertRuleParams, Pod, Silence } from '~/types'
 
 export async function getAlertRules(namespace: string) {
   const response = await fetch(`${env.BACKEND_URL}/rules?namespace=${namespace}`, {
@@ -66,8 +66,16 @@ export async function getSilencedAlerts() {
 return alerts as AlertPrometheus[];
 }
 
-// export async function getSilences() {
-// }
+export async function getSilences() {
+  const response = await fetch(`${env.BACKEND_URL}/silences`, {
+    headers: {
+      Authorization: `Bearer ${env.AUTH_TOKEN}`,
+    },
+  });
+  const silences = await response.json();
+
+  return silences as Silence[];
+}
 
 // export async function createSilence() {
 // }
@@ -228,6 +236,10 @@ export async function createAlertRule(params: CreateAlertRuleParams) {
 
 
 function processAlert(alerts: any) {
+  if (!alerts) {
+    return;
+  }
+  
   alerts.forEach((alert: any) => {
     if (typeof alert.annotations === 'string') {
       try {

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Home, OctagonMinus, BellOff, Bell, Server } from 'lucide-react'
+import { Home, OctagonMinus, BellOff, Bell, Server, ReceiptText, MegaphoneOff } from 'lucide-react'
 import { motion } from "framer-motion"
 
 const menuItems = [
@@ -8,7 +8,8 @@ const menuItems = [
   { href: "/pods", icon: Server, label: "Pods" },
   { href: "/active-alerts", icon: Bell, label: "Active Alerts" },
   { href: "/silenced-alerts", icon: BellOff, label: "Silenced Alerts" },
-  { href: "/all-alerts", icon: Bell, label: "All Alerts" },
+  { href: "/all-alerts", icon: ReceiptText, label: "All Alerts" },
+  { href: "/silences", icon: MegaphoneOff, label: "Silences" },
 ]
 
 export function Sidebar() {
