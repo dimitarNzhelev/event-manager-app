@@ -88,7 +88,6 @@ export async function deleteSilence(id: string) {
     },
   })
 
-  console.log("Response", response)
   if (!response.ok) {
     console.log("Error response", response)
     throw new Error('Failed to delete silence')

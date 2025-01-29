@@ -4,13 +4,16 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Sidebar } from '~/components/sidebar'
 import type { Silence } from '~/types'
-import { getSilences } from '../actions'
 import { SilenceDetails } from '~/components/silnce-details'
 import { SilenceList } from '~/components/silence-list'
 
 export default function SilencePage() {
   const [selectedSilence, setSelectedSilence] = useState<Silence | null>(null)
   const [refresh, setRefresh] = useState<boolean>(false)
+
+  useEffect(() => {
+    setSelectedSilence(null)
+  }, [refresh])
 
   return (
     <div className="flex h-screen bg-gray-900 text-gray-100">
