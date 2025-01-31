@@ -23,12 +23,12 @@ export default function AlertsPage() {
             <h1 className="text-3xl font-semibold text-gray-100 mb-6">Silenced Alerts</h1>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
-                <AlertListPrometheus onSelectAlert={setSelectedAlert} forSilence={true} />
+                <AlertListPrometheus onSelectAlert={setSelectedAlert} forSilence={true} refresh={false} />
               </div>
               <div>
                 <h2 className="text-xl font-semibold mb-4">Alert Details</h2>
                 {selectedAlert ? (
-                  <AlertDetailsPrometheus alert={selectedAlert} />
+                  <AlertDetailsPrometheus alert={selectedAlert} silenced={true} refresh={false} setRefresh={()=> {}}/>
                 ) : (
                   <p className="text-gray-400">Select an alert to view details</p>
                 )}

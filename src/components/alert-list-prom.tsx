@@ -8,6 +8,7 @@ import { getAlerts, getSilencedAlerts } from '~/app/actions'
 interface AlertListProps {
   onSelectAlert: (alert: AlertPrometheus) => void
   forSilence: boolean
+  refresh: boolean
 }
 
 const severityIcons = {
@@ -22,12 +23,12 @@ const severityColors = {
   info: "bg-blue-700",
 }
 
-export function AlertListPrometheus({ onSelectAlert, forSilence }: AlertListProps) {
+export function AlertListPrometheus({ onSelectAlert, forSilence, refresh }: AlertListProps) {
   const [alerts, setAlerts] = useState<AlertPrometheus[]>([])
 
   useEffect(() => {
     const fetchAlerts = async () => {
-        if(forSilence == false){
+      if(forSilence == false){
       const data = await getAlerts();
       setAlerts(data)
         }else {
@@ -37,7 +38,11 @@ export function AlertListPrometheus({ onSelectAlert, forSilence }: AlertListProp
     }
 
     fetchAlerts()
-  }, [])
+    
+    const intervalId = setInterval(fetchAlerts, 60000); // 60000ms = 1 minute
+    return () => clearInterval(intervalId);
+
+  }, [refresh])
 
   return (
     <div className="space-y-4">

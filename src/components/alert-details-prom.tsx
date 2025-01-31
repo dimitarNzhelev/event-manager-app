@@ -4,17 +4,22 @@ import { Button } from "~/components/ui/button"
 import { BellOff } from "lucide-react"
 import { SilenceModal } from "./silence-modal"
 import type { AlertPrometheus } from "~/types"
+import { processAlertForSilence } from "~/app/actions"
 
 interface AlertDetailsProps {
   alert: AlertPrometheus
+  silenced: boolean
+  setRefresh: (refresh: boolean) => void
+  refresh: boolean
 }
 
-export function AlertDetailsPrometheus({ alert }: AlertDetailsProps) {
+export function AlertDetailsPrometheus({ alert, silenced, refresh, setRefresh}: AlertDetailsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleSilenceSubmit = (startDate: string, endDate: string) => {
-    console.log(startDate, endDate)
+    processAlertForSilence(alert, startDate, endDate);
     setIsModalOpen(false)
+    setRefresh(!refresh)
   }
 
   return (
@@ -26,6 +31,7 @@ export function AlertDetailsPrometheus({ alert }: AlertDetailsProps) {
     >
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-2xl font-semibold text-white">{alert.labels.alertname}</h3>
+        {silenced == false && (
         <Button
           onClick={() => setIsModalOpen(true)}
           variant="outline"
@@ -34,6 +40,7 @@ export function AlertDetailsPrometheus({ alert }: AlertDetailsProps) {
           <BellOff className="mr-2 h-4 w-4" />
           Silence Alert
         </Button>
+        )}
       </div>
       <div className="space-y-4">
         <div>

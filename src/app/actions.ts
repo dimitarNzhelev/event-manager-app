@@ -77,9 +77,6 @@ export async function getSilences() {
   return silences as Silence[];
 }
 
-// export async function createSilence() {
-// }
-
 export async function deleteSilence(id: string) {
   const response = await fetch(`${env.BACKEND_URL}/alerts/silences/${id}`, {
     method: 'DELETE',
@@ -293,4 +290,31 @@ function calculateAge(timestamp: string): string {
 
 export async function getGrafanaDashboardURL() {
   return env.DASHBOARD_URL;
+}
+
+
+export async function processAlertForSilence(alert: AlertPrometheus, startsAt: string, endsAt: string) {
+
+  const silence = {
+    matchers: [] as { name: string; value: string; isRegex: boolean; isEqual: boolean; }[],
+    startsAt: startsAt,
+    endsAt: endsAt,
+    createdBy: "event-manager-app",
+    comment: `Silenced by the admin from event-manager-app for alert ${alert.labels.alertname}`,
+  } as Silence
+
+  for (const [key, value] of Object.entries(alert.labels)) {
+    silence.matchers.push({
+      name: key,
+      value: value,
+      isRegex: false,
+      isEqual: true,
+    })
+  }
+
+  try {
+    await updateSilence(silence)
+  } catch (error) {
+    console.error("Error creating silence:", error)
+  }
 }
