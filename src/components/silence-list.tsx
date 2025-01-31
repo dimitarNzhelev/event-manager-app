@@ -36,15 +36,17 @@ export function SilenceList({ onSelectSilence, refresh }: SilenceListProps) {
     };
 
     fetchSilences();
+   
+    const intervalId = setInterval(() => {
+      fetchSilences().catch(error => console.error('Error fetching alerts:', error))
+    }, 60000) // 60000ms = 1 minute
 
-    const intervalId = setInterval(fetchSilences, 60000); // 60000ms = 1 minute
-
-    return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId)
   }, [refresh]);
 
   return (
     <div className="space-y-4">
-      {silences && silences.map((silence, index) => {
+      {silences?.map((silence, index) => {
         const Icon = severityIcons[silence.status.state as keyof typeof severityIcons] || Info
         return (
           <motion.div

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
@@ -14,10 +14,10 @@ interface SilenceModalProps {
 
 export function SilenceModal({ isOpen, onClose, onSubmit, initialStartDate, initialEndDate }: SilenceModalProps) {
     // default value for start date is today, default value for end date is tomorrow, default value for start time is now, default value for end time is now
-    const [newStartDate, setNewStartDate] = useState(formatDateForInput(initialStartDate || new Date().toISOString()))
-    const [newStartTime, setNewStartTime] = useState(formatTimeForInput(initialStartDate || new Date().toISOString()))
-    const [newEndDate, setNewEndDate] = useState(formatDateForInput(initialEndDate || new Date().toISOString()))
-    const [newEndTime, setNewEndTime] = useState(formatTimeForInput(initialEndDate || new Date().toISOString()))
+    const [newStartDate, setNewStartDate] = useState(formatDateForInput(initialStartDate ?? new Date().toISOString()))
+    const [newStartTime, setNewStartTime] = useState(formatTimeForInput(initialStartDate ?? new Date().toISOString()))
+    const [newEndDate, setNewEndDate] = useState(formatDateForInput(initialEndDate ?? new Date().toISOString()))
+    const [newEndTime, setNewEndTime] = useState(formatTimeForInput(initialEndDate ?? new Date().toISOString()))
     const [startError, setStartError] = useState("")
     const [endError, setEndError] = useState("")
   

@@ -28,25 +28,27 @@ export function AlertListPrometheus({ onSelectAlert, forSilence, refresh }: Aler
 
   useEffect(() => {
     const fetchAlerts = async () => {
-      if(forSilence == false){
-      const data = await getAlerts();
-      setAlerts(data)
-        }else {
-            const data = await getSilencedAlerts();
-            setAlerts(data)
-        }
+      if (forSilence === false) {
+        const data = await getAlerts()
+        setAlerts(data)
+      } else {
+        const data = await getSilencedAlerts()
+        setAlerts(data)
+      }
     }
 
     fetchAlerts()
-    
-    const intervalId = setInterval(fetchAlerts, 60000); // 60000ms = 1 minute
-    return () => clearInterval(intervalId);
 
+    const intervalId = setInterval(() => {
+      fetchAlerts().catch(error => console.error('Error fetching alerts:', error))
+    }, 60000) // 60000ms = 1 minute
+
+    return () => clearInterval(intervalId)
   }, [refresh])
 
   return (
     <div className="space-y-4">
-      {alerts && alerts.map((alert, index) => {
+      {alerts?.map((alert, index) => {
         const Icon = severityIcons[alert.labels.severity as keyof typeof severityIcons] || Info
         return (
           <motion.div
