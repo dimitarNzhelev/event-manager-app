@@ -33,6 +33,11 @@ export async function getAlerts() {
           Authorization: `Bearer ${env.AUTH_TOKEN}`,
         },
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch alerts')
+      }
+      
       const alerts = await response.json();
 
       processAlert(alerts);
@@ -321,7 +326,7 @@ export async function processAlertForSilence(alert: AlertPrometheus, startsAt: s
   }
 }
 
-export async function unSilenceAlert(alert: AlertPrometheus & { labels: { [key: string]: string } }) {
+export async function unSilenceAlert(alert: AlertPrometheus & { labels: Record<string, string> }) {
   const silences = await getSilences()
 
   const silence = silences.find((silence: Silence) => {

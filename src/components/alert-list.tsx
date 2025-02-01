@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { AlertCircle, AlertTriangle, Info } from 'lucide-react'
 import type { Alert } from '~/types'
 import { getAllAlerts } from '~/app/actions'
+import { useToast } from '~/hooks/use-toast'
 interface AlertListProps {
   onSelectAlert: (alert: Alert) => void
 }
@@ -23,6 +24,7 @@ const severityColors = {
 
 export function AlertList({ onSelectAlert }: AlertListProps) {
   const [alerts, setAlerts] = useState<Alert[]>([])
+  const { toast } = useToast()
 
   useEffect(() => {
     const fetchAlerts = async () => {
@@ -30,7 +32,11 @@ export function AlertList({ onSelectAlert }: AlertListProps) {
       setAlerts(data)
     }
 
+    try {
     fetchAlerts()
+    } catch (error) {
+      toast({ title: 'Failed to fetch alerts'})
+    }
   }, [])
 
   return (

@@ -5,6 +5,7 @@ import { BellOff } from "lucide-react"
 import { SilenceModal } from "./silence-modal"
 import type { AlertPrometheus } from "~/types"
 import { processAlertForSilence, unSilenceAlert } from "~/app/actions"
+import { useToast } from "~/hooks/use-toast"
 
 interface AlertDetailsProps {
   alert: AlertPrometheus
@@ -15,16 +16,25 @@ interface AlertDetailsProps {
 
 export function AlertDetailsPrometheus({ alert, silenced, refresh, setRefresh}: AlertDetailsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const {toast } = useToast()
 
   const handleSilenceSubmit = (startDate: string, endDate: string) => {
+    try {
     processAlertForSilence(alert, startDate, endDate);
     setIsModalOpen(false)
     setRefresh(!refresh)
+    } catch (error) {
+      toast({ title: 'Failed to silence alert'})
+    }
   }
 
   const handleUnsilence = async () => {
-    await unSilenceAlert(alert);
-    setRefresh(!refresh)
+    try {
+      await unSilenceAlert(alert);
+      setRefresh(!refresh)
+    } catch (error) {
+      toast({ title: 'Failed to unsilence alert'})
+    }
   }
 
   return (

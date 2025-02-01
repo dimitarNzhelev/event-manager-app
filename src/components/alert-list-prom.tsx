@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { AlertCircle, AlertTriangle, Info } from 'lucide-react'
 import type { AlertPrometheus } from '~/types'
 import { getAlerts, getSilencedAlerts } from '~/app/actions'
+import { useToast } from '~/hooks/use-toast'
 interface AlertListProps {
   onSelectAlert: (alert: AlertPrometheus) => void
   forSilence: boolean
@@ -25,9 +26,10 @@ const severityColors = {
 
 export function AlertListPrometheus({ onSelectAlert, forSilence, refresh }: AlertListProps) {
   const [alerts, setAlerts] = useState<AlertPrometheus[]>([])
-
+  const { toast } = useToast()
   useEffect(() => {
     const fetchAlerts = async () => {
+      try {
       if (forSilence === false) {
         const data = await getAlerts()
         setAlerts(data)
@@ -36,6 +38,10 @@ export function AlertListPrometheus({ onSelectAlert, forSilence, refresh }: Aler
         setAlerts(data)
       }
     }
+    catch (error) {
+      toast({ title: 'Failed to fetch alerts'})
+    }
+  }
 
     fetchAlerts()
 

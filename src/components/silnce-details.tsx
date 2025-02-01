@@ -6,6 +6,7 @@ import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 import { SilenceModal } from "./silence-modal"
 import { deleteSilence, createSilence } from "~/app/actions"
+import { useToast } from "~/hooks/use-toast"
 
 interface SilenceDetailsProps {
   silence: Silence
@@ -15,16 +16,26 @@ interface SilenceDetailsProps {
 
 export function SilenceDetails({ silence, setRefresh, refresh }: SilenceDetailsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const {toast } = useToast()
 
   async function onDelete() {
-    await deleteSilence(silence.id)
-    setRefresh(!refresh)
+    try {
+      await deleteSilence(silence.id)
+      setRefresh(!refresh)
+    } catch (error) {
+      toast({ title: 'Failed to delete silence'})
+    }
   }
 
   async function handleRecreateSubmit(newStartDate: string, newEndDate: string) {
+    try {
     await createSilence({ ...silence, startsAt: newStartDate, endsAt: newEndDate })
     setIsModalOpen(false)
     setRefresh(!refresh)
+    } catch (error) {
+      toast({ title: 'Failed to recreate silence'})
+    }
+    
   }
 
   return (
