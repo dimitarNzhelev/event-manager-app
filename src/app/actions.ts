@@ -307,7 +307,8 @@ function processAlert(alerts: any) {
 
           alert.annotations = JSON.parse(sanitizedAnnotations);
       } catch (e) {
-        throw new Error(`Failed to parse annotations: ${e}`);
+        const error = e as Error;
+        throw new Error(`Failed to parse annotations: ${error.message}`);
       }
     }
   });
