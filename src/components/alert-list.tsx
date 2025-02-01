@@ -35,7 +35,7 @@ export function AlertList({ onSelectAlert }: AlertListProps) {
     try {
     fetchAlerts()
     } catch (error) {
-      toast({ title: 'Failed to fetch alerts'})
+      toast({ title: error instanceof Error ? error.message : 'Failed to fetch alerts' })
     }
   }, [])
 

@@ -14,11 +14,12 @@ export default function AlertsPage() {
 
   useEffect(() => {
     const fetchGrafanaUrl = async () => {
-    const url =await  getGrafanaDashboardURL();
+    const url = await  getGrafanaDashboardURL();
     setGrafanaUrl(url);
     }
     fetchGrafanaUrl();
   }, [])
+  
   return (
     <div className="flex h-screen bg-gray-900 text-gray-100">
       <Sidebar />

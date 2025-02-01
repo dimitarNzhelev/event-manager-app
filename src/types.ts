@@ -16,6 +16,12 @@ export interface Alert {
     fingerprint: string
 }
 
+export interface ErrResponse {
+  msg: string
+  status: string
+  code: string
+}
+
 export interface AlertPrometheus {
   state: string
   labels: {

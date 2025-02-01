@@ -17,6 +17,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover"
 import { getNamespaces } from '~/app/actions'
+import { useToast } from '~/hooks/use-toast'
 
 interface NamespaceSelectorProps {
   onNamespaceChange: (namespace: string) => void
@@ -26,6 +27,7 @@ export function NamespaceSelector({ onNamespaceChange }: NamespaceSelectorProps)
   const [open, setOpen] = useState(false)
   const [namespaces, setNamespaces] = useState<string[]>([])
   const [selectedNamespace, setSelectedNamespace] = useState<string>("monitoring")
+  const { toast } = useToast()
 
   useEffect(() => {
     async function fetchNamespaces() {
@@ -34,11 +36,12 @@ export function NamespaceSelector({ onNamespaceChange }: NamespaceSelectorProps)
         const additionalNamespace = 'all'
         setNamespaces([additionalNamespace, ...data ])
       } catch (error) {
-        console.error('Failed to fetch namespaces:', error)
+        toast({ title: error instanceof Error ? error.message : 'Failed to fetch namespaces' })
       }
     }
     fetchNamespaces()
   }, [])
+  
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>

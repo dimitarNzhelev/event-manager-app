@@ -7,9 +7,11 @@ import { useEffect, useState } from 'react';
 import { PodStatistics } from '~/components/pod-statistics';
 import type { Pod } from '~/types';
 import { getPods } from '../actions';
+import { useToast } from '~/hooks/use-toast';
 
 export default function PodsPage() {
     const [pods, setPods] = useState<Pod[]>([])
+    const {toast} = useToast()
 
     useEffect(() => {
         const fetchPods = async () => {
@@ -17,7 +19,7 @@ export default function PodsPage() {
                 const data = await getPods();
                 setPods(data)
             } catch (e) {
-                console.error(e);
+                toast({title: e instanceof Error ? e.message : "Failed to fetch pods"})
             }
         }
         fetchPods();

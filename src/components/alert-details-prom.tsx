@@ -20,11 +20,11 @@ export function AlertDetailsPrometheus({ alert, silenced, refresh, setRefresh}: 
 
   const handleSilenceSubmit = (startDate: string, endDate: string) => {
     try {
-    processAlertForSilence(alert, startDate, endDate);
-    setIsModalOpen(false)
-    setRefresh(!refresh)
+      processAlertForSilence(alert, startDate, endDate);
+      setIsModalOpen(false)
+      setRefresh(!refresh)
     } catch (error) {
-      toast({ title: 'Failed to silence alert'})
+      toast({ title: error instanceof Error ? error.message : 'Failed to silence alert'})
     }
   }
 
@@ -33,7 +33,7 @@ export function AlertDetailsPrometheus({ alert, silenced, refresh, setRefresh}: 
       await unSilenceAlert(alert);
       setRefresh(!refresh)
     } catch (error) {
-      toast({ title: 'Failed to unsilence alert'})
+      toast({ title: error instanceof Error ? error.message : 'Failed to unsilence alert'})
     }
   }
 

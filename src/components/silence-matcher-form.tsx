@@ -24,7 +24,6 @@ export function SilenceMatcherForm({ onNext }: SilenceMatcherFormProps) {
   const [comment, setComment] = useState("")
   const [createdby, setCreatedby] = useState("")
 
-  // Validation function: allows only letters and underscores
   const isValidMatcherName = (name: string) => /^[A-Za-z_]+$/.test(name)
 
   const addMatcher = () => {

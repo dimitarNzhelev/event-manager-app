@@ -1,7 +1,7 @@
 'use server'
 
 import { env } from '~/env'
-import type { Alert, AlertPrometheus, AlertRule, CreateAlertRuleParams, Pod, Silence } from '~/types'
+import type { Alert, AlertPrometheus, AlertRule, CreateAlertRuleParams, ErrResponse, Pod, Silence } from '~/types'
 
 export async function getAlertRules(namespace: string) {
   const response = await fetch(`${env.BACKEND_URL}/rules?namespace=${namespace}`, {
@@ -13,7 +13,8 @@ export async function getAlertRules(namespace: string) {
   })
 
   if (!response.ok) {
-    throw new Error('Failed to fetch alert rules')
+    const res = await response.json() as ErrResponse
+    throw new Error(`Error fetching alert rules: ${res.msg}`)
   }
 
   const body = await response.json()
@@ -35,7 +36,8 @@ export async function getAlerts() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch alerts')
+        const res = await response.json() as ErrResponse
+        throw new Error(`Error fetching alerts: ${res.msg}`)
       }
       
       const alerts = await response.json();
@@ -51,6 +53,12 @@ export async function getAllAlerts() {
       Authorization: `Bearer ${env.AUTH_TOKEN}`,
     },
   });
+
+  if (!response.ok) {
+    const res = await response.json() as ErrResponse
+    throw new Error(`Error fetching all alerts: ${res.msg}`)
+  }
+
   const alerts = await response.json();
 
   processAlert(alerts);
@@ -64,6 +72,12 @@ export async function getSilencedAlerts() {
       Authorization: `Bearer ${env.AUTH_TOKEN}`,
     },
   });
+
+  if (!response.ok) {
+    const res = await response.json() as ErrResponse
+    throw new Error(`Error fetching silenced alerts: ${res.msg}`)
+  }
+
   const alerts = await response.json();
 
   processAlert(alerts);
@@ -77,6 +91,12 @@ export async function getSilences() {
       Authorization: `Bearer ${env.AUTH_TOKEN}`,
     },
   });
+
+  if (!response.ok) {
+    const res = await response.json() as ErrResponse
+    throw new Error(`Error fetching silences: ${res.msg}`)
+  }
+
   const silences = await response.json();
 
   return silences as Silence[];
@@ -91,8 +111,8 @@ export async function deleteSilence(id: string) {
   })
 
   if (!response.ok) {
-    console.log("Error response", response)
-    throw new Error('Failed to delete silence')
+    const res = await response.json() as ErrResponse
+    throw new Error(`Error deleting silence: ${res.msg}`)
   }
 }
 
@@ -107,9 +127,8 @@ export async function createSilence(silence: Silence) {
     body: JSON.stringify(silence),
   })
   if (!response.ok) {
-    const res = await response.text()
-    console.log("Error response", res)
-    throw new Error('Failed to update silence')
+    const res = await response.json() as ErrResponse
+    throw new Error(`Error creating silence: ${res.msg}`)
   }
 }
 
@@ -119,6 +138,12 @@ export async function getPods() {
         Authorization: `Bearer ${env.AUTH_TOKEN}`,
       },
     })
+
+    if (!response.ok) {
+      const res = await response.json() as ErrResponse
+      throw new Error(`Error fetching pods: ${res.msg}`)
+    }
+
     const result = await response.json()
     let pods: Pod[] = []
     pods = result.map((pod: any) => {
@@ -141,6 +166,12 @@ export async function getNamespaces() {
         Authorization: `Bearer ${env.AUTH_TOKEN}`,
       },
     })
+
+  if (!response.ok) {
+    const res = await response.json() as ErrResponse
+    throw new Error(`Error fetching namespaces: ${res.msg}`)
+  }
+  
   const data = await response.json()
   const namespaces = data.map((namespace: any) => namespace?.metadata?.name ?? "")    
   return namespaces as string[]
@@ -155,9 +186,9 @@ export async function deleteRule(name: string, namespace: string) {
     });
 
     if (!response.ok) {
-        throw new Error('Failed to delete alert rule')
+      const res = await response.json() as ErrResponse
+      throw new Error(`Error deleting alert rule: ${res.msg}`)
     }
-
 }
 
 export async function updateRule(params: { id: string, namespace: string, updatedRule: AlertRule }) {
@@ -202,8 +233,8 @@ export async function updateRule(params: { id: string, namespace: string, update
   })
 
   if (!response.ok) {
-    console.error("Error response", response)
-    throw new Error('Failed to update alert rule')
+    const res = await response.json() as ErrResponse
+    throw new Error(`Error updating alert rule: ${res.msg}`)
   }
 }
 
@@ -254,8 +285,8 @@ export async function createAlertRule(params: CreateAlertRuleParams) {
   })
 
   if (!response.ok) {
-    console.error("Error response", response)
-    throw new Error('Failed to create alert rule')
+    const res = await response.json() as ErrResponse
+        throw new Error(`Error creating alert rule: ${res.msg}`)
   }
 
   return response.ok as boolean
@@ -276,7 +307,7 @@ function processAlert(alerts: any) {
 
           alert.annotations = JSON.parse(sanitizedAnnotations);
       } catch (e) {
-        console.error('Failed to parse annotations:', e);
+        throw new Error(`Failed to parse annotations: ${e}`);
       }
     }
   });
@@ -301,7 +332,6 @@ export async function getGrafanaDashboardURL() {
 
 
 export async function processAlertForSilence(alert: AlertPrometheus, startsAt: string, endsAt: string) {
-
   const silence = {
     matchers: [] as { name: string; value: string; isRegex: boolean; isEqual: boolean; }[],
     startsAt: startsAt,
@@ -318,12 +348,8 @@ export async function processAlertForSilence(alert: AlertPrometheus, startsAt: s
       isEqual: true,
     })
   }
-
-  try {
-    await createSilence(silence)
-  } catch (error) {
-    console.error("Error creating silence:", error)
-  }
+  
+  await createSilence(silence)
 }
 
 export async function unSilenceAlert(alert: AlertPrometheus & { labels: Record<string, string> }) {

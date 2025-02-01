@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { deleteRule, updateRule } from '~/app/actions'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
+import { useToast } from '~/hooks/use-toast'
 
 interface AlertRuleDetailsProps {
   rule: AlertRule
@@ -21,6 +22,7 @@ export function AlertRuleDetails({ rule, onDelete, onUpdate, namespace }: AlertR
   const [isEditing, setIsEditing] = useState(false)
   const [editedRule, setEditedRule] = useState<AlertRule>(rule)
   const [error, setError] = useState<string | null>(null)
+  const {toast} = useToast()
 
   const handleDelete = async () => {
     setIsDeleting(true)
@@ -29,7 +31,7 @@ export function AlertRuleDetails({ rule, onDelete, onUpdate, namespace }: AlertR
       await deleteRule(rule.id, namespace)
       onDelete()
     } catch (err) {
-      console.error('Failed to delete rule:', err)
+      toast({ title: err instanceof Error ? err.message : 'Failed to delete rule' })
       setError('Failed to delete rule. Please try again.')
     } finally {
       setIsDeleting(false)
@@ -52,7 +54,7 @@ export function AlertRuleDetails({ rule, onDelete, onUpdate, namespace }: AlertR
       onUpdate(editedRule)
       setIsEditing(false)
     } catch (err) {
-      console.error('Failed to update rule:', err)
+      toast({ title: err instanceof Error ? err.message : 'Failed to update rule' })
       setError('Failed to update rule. Please try again.')
     }
   }

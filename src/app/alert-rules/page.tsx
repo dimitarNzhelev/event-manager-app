@@ -9,12 +9,14 @@ import { CreateAlertRuleForm } from '~/components/create-alert-rule-form'
 import { NamespaceSelector } from '~/components/namespace-selector'
 import type { AlertRule } from '~/types'
 import { getAlertRules } from '../actions'
+import { useToast } from '~/hooks/use-toast'
 
 export default function AlertRulesPage() {
   const [selectedRule, setSelectedRule] = useState<AlertRule | null>(null)
   const [rules, setRules] = useState<AlertRule[]>([])
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [selectedNamespace, setSelectedNamespace] = useState<string>("monitoring")
+  const { toast } = useToast()
 
 
   const fetchRules = useCallback(async () => {
@@ -23,7 +25,11 @@ export default function AlertRulesPage() {
   }, [selectedNamespace])
 
   useEffect(() => {
-    fetchRules()
+    try {
+      fetchRules()
+    } catch (e) {
+      toast({ title: e instanceof Error ? e.message : 'Failed to fetch alert rules' })
+    }
   }, [selectedNamespace, fetchRules])
 
   const handleNamespaceChange = (namespace: string) => {

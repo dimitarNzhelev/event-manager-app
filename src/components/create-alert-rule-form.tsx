@@ -9,10 +9,12 @@ import { Textarea } from "~/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
 import { Label } from "~/components/ui/label"
 import { createAlertRule } from '../app/actions'
+import { useToast } from '~/hooks/use-toast'
 
 export function CreateAlertRuleForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const {toast} = useToast()
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -40,7 +42,7 @@ export function CreateAlertRuleForm() {
       })
       location.reload()
     } catch (error) {
-      console.error('Failed to create alert rule:', error)
+      toast({ title: error instanceof Error ? error.message : 'Failed to create alert rule' })
       setError('Failed to create alert rule. Please try again.')
     } finally {
       setIsLoading(false)

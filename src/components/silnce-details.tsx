@@ -16,14 +16,14 @@ interface SilenceDetailsProps {
 
 export function SilenceDetails({ silence, setRefresh, refresh }: SilenceDetailsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const {toast } = useToast()
+  const { toast } = useToast()
 
   async function onDelete() {
     try {
       await deleteSilence(silence.id)
       setRefresh(!refresh)
     } catch (error) {
-      toast({ title: 'Failed to delete silence'})
+      toast({ title: error instanceof Error ? error.message : 'Failed to delete silence' })
     }
   }
 
@@ -33,7 +33,7 @@ export function SilenceDetails({ silence, setRefresh, refresh }: SilenceDetailsP
     setIsModalOpen(false)
     setRefresh(!refresh)
     } catch (error) {
-      toast({ title: 'Failed to recreate silence'})
+      toast({ title: error instanceof Error ? error.message : 'Failed to recreate silence' })
     }
     
   }

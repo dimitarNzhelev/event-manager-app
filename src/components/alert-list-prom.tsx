@@ -29,7 +29,7 @@ export function AlertListPrometheus({ onSelectAlert, forSilence, refresh }: Aler
   const { toast } = useToast()
   useEffect(() => {
     const fetchAlerts = async () => {
-      try {
+    try {
       if (forSilence === false) {
         const data = await getAlerts()
         setAlerts(data)
@@ -37,9 +37,8 @@ export function AlertListPrometheus({ onSelectAlert, forSilence, refresh }: Aler
         const data = await getSilencedAlerts()
         setAlerts(data)
       }
-    }
-    catch (error) {
-      toast({ title: 'Failed to fetch alerts'})
+    } catch (error) {
+      toast({ title: error instanceof Error ? error.message : 'Failed to fetch alerts' })
     }
   }
 
@@ -47,7 +46,7 @@ export function AlertListPrometheus({ onSelectAlert, forSilence, refresh }: Aler
 
     const intervalId = setInterval(() => {
       fetchAlerts().catch(error => console.error('Error fetching alerts:', error))
-    }, 60000) // 60000ms = 1 minute
+    }, 60000)
 
     return () => clearInterval(intervalId)
   }, [refresh])

@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { AlertCircle, AlertTriangle, Info } from 'lucide-react'
-import type { Alert, Silence } from '~/types'
-import { getAllAlerts, getSilences } from '~/app/actions'
+import type { Silence } from '~/types'
+import { getSilences } from '~/app/actions'
+import { useToast } from '~/hooks/use-toast'
+
 interface SilenceListProps {
   onSelectSilence: (silence: Silence) => void
   refresh: boolean
@@ -24,14 +26,14 @@ const severityColors = {
 
 export function SilenceList({ onSelectSilence, refresh }: SilenceListProps) {
   const [silences, setSilences] = useState<Silence[]>([])
-
+  const { toast } = useToast()
   useEffect(() => {
     const fetchSilences = async () => {
       try {
         const data = await getSilences(); // Replace with your API call
         setSilences(data);
       } catch (error) {
-        console.error("Error fetching silences:", error);
+        toast({ title: error instanceof Error ? error.message : 'Failed to fetch silences' })
       }
     };
 

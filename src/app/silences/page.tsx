@@ -12,6 +12,7 @@ import { SilenceModal } from "~/components/silence-modal"
 import { SilenceMatcherForm } from "~/components/silence-matcher-form"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "~/components/ui/dialog"
 import { createSilence } from "../actions"
+import { useToast } from "~/hooks/use-toast"
 
 interface Matcher {
   name: string
@@ -26,6 +27,7 @@ export default function SilencePage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [createStep, setCreateStep] = useState(1)
   const [newSilenceData, setNewSilenceData] = useState<{ matchers: Matcher[]; comment: string, createdby: string } | null>(null)
+  const {toast} = useToast()
 
   useEffect(() => {
     setSelectedSilence(null)
@@ -33,24 +35,27 @@ export default function SilencePage() {
 
   const handleCreateSilence = async (startDate: string, endDate: string) => {
     if (newSilenceData) {
-      // Implement the logic to create a new silence
-      console.log("Creating silence:", { ...newSilenceData, startDate, endDate })
-      await createSilence({
-        ...newSilenceData, startsAt: startDate, endsAt: endDate,
-        id: "",
-        updatedAt: startDate,
-        createdBy: newSilenceData.createdby,
-        status: {
-          state: ""
-        }
-      });
-      
-      setIsCreateModalOpen(false)
-      setCreateStep(1)
-      setNewSilenceData(null)
-      setRefresh(!refresh)
+
+      try {
+        await createSilence({
+          ...newSilenceData, startsAt: startDate, endsAt: endDate,
+          id: "",
+          updatedAt: startDate,
+          createdBy: newSilenceData.createdby,
+          status: {
+            state: ""
+          }
+        });
+        
+        setIsCreateModalOpen(false)
+        setCreateStep(1)
+        setNewSilenceData(null)
+        setRefresh(!refresh)
+      } catch (e) {
+      toast({title: e instanceof Error ? e.message : "Failed to create silence"})
     }
   }
+}
 
   const handleMatcherFormNext = (matchers: Matcher[], comment: string, createdby: string) => {
     setNewSilenceData({ matchers, comment, createdby })
@@ -115,4 +120,3 @@ export default function SilencePage() {
     </div>
   )
 }
-
