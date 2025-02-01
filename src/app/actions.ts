@@ -48,6 +48,7 @@ export async function getAlerts() {
 }
 
 export async function getAllAlerts() {
+  try {
   const response = await fetch(`${env.BACKEND_URL}/alerts`, {
     headers: {
       Authorization: `Bearer ${env.AUTH_TOKEN}`,
@@ -60,10 +61,14 @@ export async function getAllAlerts() {
   }
 
   const alerts = await response.json();
+  console.log("Alerts, response", alerts, response)
 
   processAlert(alerts);
 
-return alerts as Alert[];
+  return alerts as Alert[];
+} catch (error) {
+  throw new Error(`Error fetching all alerts: ${error instanceof Error ? error.message : 'Unknown error'}`)
+}
 }
 
 export async function getSilencedAlerts() {
@@ -307,8 +312,8 @@ function processAlert(alerts: any) {
 
           alert.annotations = JSON.parse(sanitizedAnnotations);
       } catch (e) {
-        const error = e as Error;
-        throw new Error(`Failed to parse annotations: ${error.message}`);
+        const error = e instanceof Error ? e.message : 'Unknown error';
+        console.error('Error parsing annotations', error);
       }
     }
   });
