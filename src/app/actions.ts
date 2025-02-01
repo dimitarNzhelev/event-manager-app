@@ -320,3 +320,18 @@ export async function processAlertForSilence(alert: AlertPrometheus, startsAt: s
     console.error("Error creating silence:", error)
   }
 }
+
+export async function unSilenceAlert(alert: AlertPrometheus & { labels: { [key: string]: string } }) {
+  const silences = await getSilences()
+
+  const silence = silences.find((silence: Silence) => {
+    return silence?.matchers?.every((matcher) => {
+      return alert.labels[matcher.name] === matcher.value
+    })
+  })
+
+  console.log("Silence to delete", silence?.id)
+  if (silence) {
+    await deleteSilence(silence.id)
+  }
+}

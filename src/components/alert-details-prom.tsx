@@ -4,7 +4,7 @@ import { Button } from "~/components/ui/button"
 import { BellOff } from "lucide-react"
 import { SilenceModal } from "./silence-modal"
 import type { AlertPrometheus } from "~/types"
-import { processAlertForSilence } from "~/app/actions"
+import { processAlertForSilence, unSilenceAlert } from "~/app/actions"
 
 interface AlertDetailsProps {
   alert: AlertPrometheus
@@ -19,6 +19,11 @@ export function AlertDetailsPrometheus({ alert, silenced, refresh, setRefresh}: 
   const handleSilenceSubmit = (startDate: string, endDate: string) => {
     processAlertForSilence(alert, startDate, endDate);
     setIsModalOpen(false)
+    setRefresh(!refresh)
+  }
+
+  const handleUnsilence = async () => {
+    await unSilenceAlert(alert);
     setRefresh(!refresh)
   }
 
@@ -39,6 +44,16 @@ export function AlertDetailsPrometheus({ alert, silenced, refresh, setRefresh}: 
         >
           <BellOff className="mr-2 h-4 w-4" />
           Silence Alert
+        </Button>
+        )}
+         {silenced == true && (
+        <Button
+          onClick={handleUnsilence}
+          variant="outline"
+          className="bg-gray-700 hover:bg-gray-600 text-white border-gray-600 hover:border-gray-500"
+        >
+          <BellOff className="mr-2 h-4 w-4" />
+          Unsilence Alert
         </Button>
         )}
       </div>

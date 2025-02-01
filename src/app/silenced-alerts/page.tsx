@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Sidebar } from '~/components/sidebar'
 import type { AlertPrometheus } from '~/types'
@@ -9,6 +9,11 @@ import { AlertListPrometheus } from '~/components/alert-list-prom'
 
 export default function AlertsPage() {
   const [selectedAlert, setSelectedAlert] = useState<AlertPrometheus | null>(null)
+  const [refresh, setRefresh] = useState<boolean>(false)
+
+  useEffect(() => {
+    setSelectedAlert(null)
+  }, [refresh])
 
   return (
     <div className="flex h-screen bg-gray-900 text-gray-100">
@@ -23,12 +28,12 @@ export default function AlertsPage() {
             <h1 className="text-3xl font-semibold text-gray-100 mb-6">Silenced Alerts</h1>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
-                <AlertListPrometheus onSelectAlert={setSelectedAlert} forSilence={true} refresh={false} />
+                <AlertListPrometheus onSelectAlert={setSelectedAlert} forSilence={true} refresh={refresh} />
               </div>
               <div>
                 <h2 className="text-xl font-semibold mb-4">Alert Details</h2>
                 {selectedAlert ? (
-                  <AlertDetailsPrometheus alert={selectedAlert} silenced={true} refresh={false} setRefresh={()=> {}}/>
+                  <AlertDetailsPrometheus alert={selectedAlert} silenced={true} refresh={refresh} setRefresh={setRefresh}/>
                 ) : (
                   <p className="text-gray-400">Select an alert to view details</p>
                 )}
