@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 import { SilenceModal } from "./silence-modal"
-import { deleteSilence, updateSilence } from "~/app/actions"
+import { deleteSilence, createSilence } from "~/app/actions"
 
 interface SilenceDetailsProps {
   silence: Silence
@@ -22,7 +22,7 @@ export function SilenceDetails({ silence, setRefresh, refresh }: SilenceDetailsP
   }
 
   async function handleRecreateSubmit(newStartDate: string, newEndDate: string) {
-    await updateSilence({ ...silence, startsAt: newStartDate, endsAt: newEndDate })
+    await createSilence({ ...silence, startsAt: newStartDate, endsAt: newEndDate })
     setIsModalOpen(false)
     setRefresh(!refresh)
   }
@@ -51,7 +51,7 @@ export function SilenceDetails({ silence, setRefresh, refresh }: SilenceDetailsP
           )}
           {silence.status.state != "expired" && (
             <Button variant="destructive" onClick={onDelete} className="bg-red-600 hover:bg-red-700 text-white flex-1">
-              Delete
+              Expire
             </Button>
           )}
         </div>

@@ -122,7 +122,7 @@ export function SilenceModal({ isOpen, onClose, onSubmit, initialStartDate, init
           {endError && <p className="text-red-500 text-sm">{endError}</p>}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} className="text-gray-400 hover:text-gray-200">
+          <Button variant="outline" onClick={onClose} className="text-gray-600 hover:text-gray-800">
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={!!startError || !!endError}>

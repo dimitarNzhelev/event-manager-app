@@ -91,7 +91,8 @@ export async function deleteSilence(id: string) {
   }
 }
 
-export async function updateSilence(silence: Silence) {
+export async function createSilence(silence: Silence) {
+  console.log("Creating silence", silence)
   const response = await fetch(`${env.BACKEND_URL}/alerts/silences`, {
     method: 'POST',
     headers: {
@@ -101,7 +102,8 @@ export async function updateSilence(silence: Silence) {
     body: JSON.stringify(silence),
   })
   if (!response.ok) {
-    console.log("Error response", response)
+    const res = await response.text()
+    console.log("Error response", res)
     throw new Error('Failed to update silence')
   }
 }
@@ -313,7 +315,7 @@ export async function processAlertForSilence(alert: AlertPrometheus, startsAt: s
   }
 
   try {
-    await updateSilence(silence)
+    await createSilence(silence)
   } catch (error) {
     console.error("Error creating silence:", error)
   }
