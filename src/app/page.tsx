@@ -6,13 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
 import { useEffect, useState } from "react"
 import type { Pod, Alert, AlertPrometheus } from "~/types"
 import Link from "next/link"
-import { getAllAlerts, getNamespaces, getPods } from "./actions"
+import { getAlerts, getNamespaces, getPods } from "./actions"
 
 
 export default function DashboardPage() {
   const [pods, setPods] = useState<Pod[]>([])
   const [namespaces, setNamespaces] = useState<string[]>([])
-  const [alerts, setAlerts] = useState<Alert[]>([])
+  const [alerts, setAlerts] = useState<AlertPrometheus[]>([])
 
   useEffect(() => {
     const fetchPods = async () => {
@@ -35,8 +35,14 @@ export default function DashboardPage() {
 
     const fetchAlerts = async () => {
       try {
-        const data = await getAllAlerts();      
-        setAlerts(data) 
+        const data = await getAlerts();
+        const filtered = data.filter(alert => alert.labels.severity === 'firing');
+        setAlerts(filtered.map(alert => ({
+          state: alert.state,
+          labels: alert.labels,
+          annotations: alert.annotations,
+          activeAt: alert.activeAt,
+        })));
       } catch (e) {
         console.error(e);
       }
@@ -77,7 +83,7 @@ export default function DashboardPage() {
             </Card>
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
-            <Link href="/alerts">
+            <Link href="/active-alerts">
               <Card className="bg-gray-800 border-gray-700 cursor-pointer">
                 <CardHeader>
                   <CardTitle className="text-gray-100">Alerts</CardTitle>
